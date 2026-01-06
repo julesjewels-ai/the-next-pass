@@ -34,3 +34,13 @@ def test_career_matching_high_teamwork(platform):
     """Test that high teamwork scores return success roles."""
     jobs = platform.match_careers(grit_score=5, teamwork_score=9)
     assert "Customer Success Manager" in jobs
+
+def test_loads_skills_from_json(platform):
+    """Verify that the skill database is loaded from the JSON file."""
+    # Check that _skill_db is a dictionary and not empty
+    assert isinstance(platform._skill_db, dict)
+    assert len(platform._skill_db) > 0
+
+    # Check for a specific, known key from the JSON file
+    assert "Injury Rehab" in platform._skill_db
+    assert "overcoming significant setbacks" in platform._skill_db["Injury Rehab"]

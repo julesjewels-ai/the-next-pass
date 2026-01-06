@@ -5,6 +5,8 @@ Handles the translation of athletic experiences into professional terminology
 and matches athletes with suitable career paths.
 """
 
+import json
+import os
 from dataclasses import dataclass
 from typing import Dict, List
 
@@ -18,13 +20,10 @@ class CareerPlatform:
     """Main controller for platform features."""
 
     def __init__(self) -> None:
-        self._skill_db = {
-            "Captain": "Demonstrated leadership by coordinating team activities and fostering a collaborative environment under high-pressure conditions.",
-            "Film Study": "Applied analytical skills to evaluate performance metrics and develop strategic operational plans.",
-            "5am Workouts": "Exhibited exceptional self-discipline and time management skills, balancing 30+ hour training weeks with academic responsibilities.",
-            "Bench/Reserve": "Maintained high readiness and team support while actively contributing to group preparation and morale.",
-            "Injury Rehab": "Showcased resilience and adaptability by overcoming significant setbacks through structured recovery planning."
-        }
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        db_path = os.path.join(current_dir, 'skills_db.json')
+        with open(db_path, 'r') as f:
+            self._skill_db = json.load(f)
 
     def translate_skills(self, profile: AthleteProfile) -> Dict[str, str]:
         """
