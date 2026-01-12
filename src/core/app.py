@@ -8,6 +8,16 @@ and matches athletes with suitable career paths.
 from dataclasses import dataclass
 from typing import Dict, List
 
+SKILL_DB = {
+    "Captain": "Demonstrated leadership by coordinating team activities and fostering a collaborative environment under high-pressure conditions.",
+    "Film Study": "Applied analytical skills to evaluate performance metrics and develop strategic operational plans.",
+    "5am Workouts": "Exhibited exceptional self-discipline and time management skills, balancing 30+ hour training weeks with academic responsibilities.",
+    "Bench/Reserve": "Maintained high readiness and team support while actively contributing to group preparation and morale.",
+    "Injury Rehab": "Showcased resilience and adaptability by overcoming significant setbacks through structured recovery planning."
+}
+
+HIGH_SCORE_THRESHOLD = 8
+
 @dataclass
 class AthleteProfile:
     """Represents a student-athlete's basic background."""
@@ -16,15 +26,6 @@ class AthleteProfile:
 
 class CareerPlatform:
     """Main controller for platform features."""
-
-    def __init__(self) -> None:
-        self._skill_db = {
-            "Captain": "Demonstrated leadership by coordinating team activities and fostering a collaborative environment under high-pressure conditions.",
-            "Film Study": "Applied analytical skills to evaluate performance metrics and develop strategic operational plans.",
-            "5am Workouts": "Exhibited exceptional self-discipline and time management skills, balancing 30+ hour training weeks with academic responsibilities.",
-            "Bench/Reserve": "Maintained high readiness and team support while actively contributing to group preparation and morale.",
-            "Injury Rehab": "Showcased resilience and adaptability by overcoming significant setbacks through structured recovery planning."
-        }
 
     def translate_skills(self, profile: AthleteProfile) -> Dict[str, str]:
         """
@@ -39,12 +40,12 @@ class CareerPlatform:
         translations = {}
         
         # Universal Athlete Skills
-        translations["Time Management"] = self._skill_db["5am Workouts"]
-        translations["Strategic Analysis"] = self._skill_db["Film Study"]
+        translations["Time Management"] = SKILL_DB["5am Workouts"]
+        translations["Strategic Analysis"] = SKILL_DB["Film Study"]
 
         # Role Specific
         if "Captain" in profile.role:
-            translations["Leadership"] = self._skill_db["Captain"]
+            translations["Leadership"] = SKILL_DB["Captain"]
         
         return translations
 
@@ -61,11 +62,11 @@ class CareerPlatform:
         """
         matches = ["Sales Development Representative", "Project Coordinator"]
         
-        if grit_score > 8:
+        if grit_score > HIGH_SCORE_THRESHOLD:
             matches.append("Operations Manager (High Intensity)")
             matches.append("Logistics Specialist")
             
-        if teamwork_score > 8:
+        if teamwork_score > HIGH_SCORE_THRESHOLD:
             matches.append("Customer Success Manager")
             matches.append("Human Resources Specialist")
             
