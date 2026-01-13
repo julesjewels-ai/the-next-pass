@@ -6,7 +6,6 @@ to help student-athletes translate their skills into corporate value.
 """
 
 import argparse
-import sys
 from src.core.app import CareerPlatform, AthleteProfile
 
 def main() -> None:
