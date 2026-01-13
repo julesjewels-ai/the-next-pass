@@ -16,6 +16,15 @@ SKILL_DB = {
     "Injury Rehab": "Showcased resilience and adaptability by overcoming significant setbacks through structured recovery planning."
 }
 
+UNIVERSAL_SKILLS = {
+    "Time Management": "5am Workouts",
+    "Strategic Analysis": "Film Study"
+}
+
+HIGH_GRIT_JOBS = ["Operations Manager (High Intensity)", "Logistics Specialist"]
+HIGH_TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
+BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
+
 HIGH_SCORE_THRESHOLD = 8
 
 @dataclass
@@ -37,11 +46,11 @@ class CareerPlatform:
         Returns:
             Dictionary mapping the athletic concept to the corporate translation.
         """
-        translations = {}
-        
         # Universal Athlete Skills
-        translations["Time Management"] = SKILL_DB["5am Workouts"]
-        translations["Strategic Analysis"] = SKILL_DB["Film Study"]
+        translations = {
+            category: SKILL_DB[key]
+            for category, key in UNIVERSAL_SKILLS.items()
+        }
 
         # Role Specific
         if "Captain" in profile.role:
@@ -60,14 +69,12 @@ class CareerPlatform:
         Returns:
             List of job titles.
         """
-        matches = ["Sales Development Representative", "Project Coordinator"]
+        matches = list(BASE_JOBS)
         
         if grit_score > HIGH_SCORE_THRESHOLD:
-            matches.append("Operations Manager (High Intensity)")
-            matches.append("Logistics Specialist")
+            matches.extend(HIGH_GRIT_JOBS)
             
         if teamwork_score > HIGH_SCORE_THRESHOLD:
-            matches.append("Customer Success Manager")
-            matches.append("Human Resources Specialist")
+            matches.extend(HIGH_TEAMWORK_JOBS)
             
         return matches
