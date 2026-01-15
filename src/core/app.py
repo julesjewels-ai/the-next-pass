@@ -8,32 +8,44 @@ and matches athletes with suitable career paths.
 from dataclasses import dataclass
 from typing import Dict, List
 
+# Athletic Activities / Roles
+ROLE_CAPTAIN = "Captain"
+ACTIVITY_FILM_STUDY = "Film Study"
+ACTIVITY_5AM_WORKOUTS = "5am Workouts"
+ACTIVITY_BENCH = "Bench/Reserve"
+ACTIVITY_REHAB = "Injury Rehab"
+
+# Corporate Skills
+SKILL_LEADERSHIP = "Leadership"
+SKILL_TIME_MANAGEMENT = "Time Management"
+SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
+
 SKILL_DB = {
-    "Captain": (
+    ROLE_CAPTAIN: (
         "Demonstrated leadership by coordinating team activities and fostering a "
         "collaborative environment under high-pressure conditions."
     ),
-    "Film Study": (
+    ACTIVITY_FILM_STUDY: (
         "Applied analytical skills to evaluate performance metrics and develop "
         "strategic operational plans."
     ),
-    "5am Workouts": (
+    ACTIVITY_5AM_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
     ),
-    "Bench/Reserve": (
+    ACTIVITY_BENCH: (
         "Maintained high readiness and team support while actively contributing "
         "to group preparation and morale."
     ),
-    "Injury Rehab": (
+    ACTIVITY_REHAB: (
         "Showcased resilience and adaptability by overcoming significant "
         "setbacks through structured recovery planning."
     )
 }
 
 UNIVERSAL_SKILLS = {
-    "Time Management": "5am Workouts",
-    "Strategic Analysis": "Film Study"
+    SKILL_TIME_MANAGEMENT: ACTIVITY_5AM_WORKOUTS,
+    SKILL_STRATEGIC_ANALYSIS: ACTIVITY_FILM_STUDY
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
@@ -67,8 +79,8 @@ class CareerPlatform:
         }
 
         # Role Specific
-        if "Captain" in profile.role:
-            translations["Leadership"] = SKILL_DB["Captain"]
+        if ROLE_CAPTAIN in profile.role:
+            translations[SKILL_LEADERSHIP] = SKILL_DB[ROLE_CAPTAIN]
 
         return translations
 
