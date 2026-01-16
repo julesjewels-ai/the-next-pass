@@ -8,32 +8,46 @@ and matches athletes with suitable career paths.
 from dataclasses import dataclass
 from typing import Dict, List
 
+# Role Constants
+ROLE_CAPTAIN = "Captain"
+ROLE_BENCH_RESERVE = "Bench/Reserve"
+ROLE_INJURY_REHAB = "Injury Rehab"
+
+# Activity Constants
+ACTIVITY_FILM_STUDY = "Film Study"
+ACTIVITY_5AM_WORKOUTS = "5am Workouts"
+
+# Corporate Skill Constants
+SKILL_LEADERSHIP = "Leadership"
+SKILL_TIME_MANAGEMENT = "Time Management"
+SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
+
 SKILL_DB = {
-    "Captain": (
+    ROLE_CAPTAIN: (
         "Demonstrated leadership by coordinating team activities and fostering a "
         "collaborative environment under high-pressure conditions."
     ),
-    "Film Study": (
+    ACTIVITY_FILM_STUDY: (
         "Applied analytical skills to evaluate performance metrics and develop "
         "strategic operational plans."
     ),
-    "5am Workouts": (
+    ACTIVITY_5AM_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
     ),
-    "Bench/Reserve": (
+    ROLE_BENCH_RESERVE: (
         "Maintained high readiness and team support while actively contributing "
         "to group preparation and morale."
     ),
-    "Injury Rehab": (
+    ROLE_INJURY_REHAB: (
         "Showcased resilience and adaptability by overcoming significant "
         "setbacks through structured recovery planning."
     )
 }
 
 UNIVERSAL_SKILLS = {
-    "Time Management": "5am Workouts",
-    "Strategic Analysis": "Film Study"
+    SKILL_TIME_MANAGEMENT: ACTIVITY_5AM_WORKOUTS,
+    SKILL_STRATEGIC_ANALYSIS: ACTIVITY_FILM_STUDY
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
@@ -67,8 +81,8 @@ class CareerPlatform:
         }
 
         # Role Specific
-        if "Captain" in profile.role:
-            translations["Leadership"] = SKILL_DB["Captain"]
+        if ROLE_CAPTAIN in profile.role:
+            translations[SKILL_LEADERSHIP] = SKILL_DB[ROLE_CAPTAIN]
 
         return translations
 
