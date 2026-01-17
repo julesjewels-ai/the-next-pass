@@ -8,32 +8,48 @@ and matches athletes with suitable career paths.
 from dataclasses import dataclass
 from typing import Dict, List
 
+# Domain Constants
+ROLE_CAPTAIN = "Captain"
+SKILL_LEADERSHIP = "Leadership"
+
+# Skill Keys
+KEY_CAPTAIN = "Captain"
+KEY_FILM_STUDY = "Film Study"
+KEY_WORKOUTS = "5am Workouts"
+KEY_BENCH = "Bench/Reserve"
+KEY_REHAB = "Injury Rehab"
+
 SKILL_DB = {
-    "Captain": (
+    KEY_CAPTAIN: (
         "Demonstrated leadership by coordinating team activities and fostering a "
         "collaborative environment under high-pressure conditions."
     ),
-    "Film Study": (
+    KEY_FILM_STUDY: (
         "Applied analytical skills to evaluate performance metrics and develop "
         "strategic operational plans."
     ),
-    "5am Workouts": (
+    KEY_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
     ),
-    "Bench/Reserve": (
+    KEY_BENCH: (
         "Maintained high readiness and team support while actively contributing "
         "to group preparation and morale."
     ),
-    "Injury Rehab": (
+    KEY_REHAB: (
         "Showcased resilience and adaptability by overcoming significant "
         "setbacks through structured recovery planning."
     )
 }
 
 UNIVERSAL_SKILLS = {
-    "Time Management": "5am Workouts",
-    "Strategic Analysis": "Film Study"
+    "Time Management": KEY_WORKOUTS,
+    "Strategic Analysis": KEY_FILM_STUDY
+}
+
+# Mapping: Role Keyword -> (Output Skill Name, Database Key)
+ROLE_SKILL_MAPPINGS = {
+    ROLE_CAPTAIN: (SKILL_LEADERSHIP, KEY_CAPTAIN),
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
@@ -67,8 +83,9 @@ class CareerPlatform:
         }
 
         # Role Specific
-        if "Captain" in profile.role:
-            translations["Leadership"] = SKILL_DB["Captain"]
+        for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
+            if role_keyword in profile.role:
+                translations[skill_name] = SKILL_DB[db_key]
 
         return translations
 
