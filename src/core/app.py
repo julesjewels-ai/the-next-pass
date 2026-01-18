@@ -11,6 +11,8 @@ from typing import Dict, List
 # Domain Constants
 ROLE_CAPTAIN = "Captain"
 SKILL_LEADERSHIP = "Leadership"
+SKILL_TIME_MANAGEMENT = "Time Management"
+SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
 
 # Skill Keys
 KEY_CAPTAIN = "Captain"
@@ -43,8 +45,8 @@ SKILL_DB = {
 }
 
 UNIVERSAL_SKILLS = {
-    "Time Management": KEY_WORKOUTS,
-    "Strategic Analysis": KEY_FILM_STUDY
+    SKILL_TIME_MANAGEMENT: KEY_WORKOUTS,
+    SKILL_STRATEGIC_ANALYSIS: KEY_FILM_STUDY
 }
 
 # Mapping: Role Keyword -> (Output Skill Name, Database Key)
