@@ -6,7 +6,7 @@ to help student-athletes translate their skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable, Any
+from typing import Dict, Callable
 from src.core.app import CareerPlatform, AthleteProfile
 
 def handle_translate(platform: CareerPlatform, args: argparse.Namespace) -> None:

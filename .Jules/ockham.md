@@ -11,3 +11,7 @@
 ## 2024-05-24 - CLI Control Flow Simplification
 **Observation:** `main.py` used nested `if/elif` statements for command routing, increasing cognitive load and hindering extensibility.
 **Action:** Refactored into `command_handlers` dictionary with isolated functions `handle_translate` and `handle_match` (Table-Driven Method).
+
+## 2025-05-26 - Dead Code Removal
+**Observation:** `KEY_BENCH` and `KEY_REHAB` in `src/core/app.py` were defined but never used in the application logic.
+**Action:** Removed unused constants and their corresponding dictionary entries in `SKILL_DB` to reduce noise.
