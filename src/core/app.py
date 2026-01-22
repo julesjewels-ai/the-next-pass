@@ -18,8 +18,6 @@ SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
 KEY_CAPTAIN = "Captain"
 KEY_FILM_STUDY = "Film Study"
 KEY_WORKOUTS = "5am Workouts"
-KEY_BENCH = "Bench/Reserve"
-KEY_REHAB = "Injury Rehab"
 
 SKILL_DB = {
     KEY_CAPTAIN: (
@@ -33,14 +31,6 @@ SKILL_DB = {
     KEY_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
-    ),
-    KEY_BENCH: (
-        "Maintained high readiness and team support while actively contributing "
-        "to group preparation and morale."
-    ),
-    KEY_REHAB: (
-        "Showcased resilience and adaptability by overcoming significant "
-        "setbacks through structured recovery planning."
     )
 }
 
