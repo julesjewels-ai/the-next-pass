@@ -18,8 +18,6 @@ SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
 KEY_CAPTAIN = "Captain"
 KEY_FILM_STUDY = "Film Study"
 KEY_WORKOUTS = "5am Workouts"
-KEY_BENCH = "Bench/Reserve"
-KEY_REHAB = "Injury Rehab"
 
 SKILL_DB = {
     KEY_CAPTAIN: (
@@ -33,14 +31,6 @@ SKILL_DB = {
     KEY_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
-    ),
-    KEY_BENCH: (
-        "Maintained high readiness and team support while actively contributing "
-        "to group preparation and morale."
-    ),
-    KEY_REHAB: (
-        "Showcased resilience and adaptability by overcoming significant "
-        "setbacks through structured recovery planning."
     )
 }
 
@@ -79,17 +69,18 @@ class CareerPlatform:
         Returns:
             Dictionary mapping the athletic concept to the corporate translation.
         """
-        translations = {
+        universal_skills = {
             corpo: SKILL_DB[athletic]
             for corpo, athletic in UNIVERSAL_SKILLS.items()
         }
 
-        # Role Specific
-        for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
-            if role_keyword in profile.role:
-                translations[skill_name] = SKILL_DB[db_key]
+        role_skills = {
+            skill_name: SKILL_DB[db_key]
+            for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items()
+            if role_keyword in profile.role
+        }
 
-        return translations
+        return {**universal_skills, **role_skills}
 
     def match_careers(self, grit_score: int, teamwork_score: int) -> List[str]:
         """
