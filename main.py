@@ -6,22 +6,22 @@ to help student-athletes translate their skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable, Any
-from src.core.app import CareerPlatform, AthleteProfile
+from typing import Dict, Callable
+from src.core.app import translate_skills, match_careers, AthleteProfile
 
-def handle_translate(platform: CareerPlatform, args: argparse.Namespace) -> None:
+def handle_translate(args: argparse.Namespace) -> None:
     """Handles the 'translate' command."""
     profile = AthleteProfile(sport=args.sport, role=args.role)
-    result = platform.translate_skills(profile)
+    result = translate_skills(profile)
     print(f"\n--- Resume Translation for {args.sport} {args.role} ---")
     for raw, corpo in result.items():
         print(f"Athletic Context: \"{raw}\"")
         print(f"Resume Bullet:    \"{corpo}\"\n")
 
-def handle_match(platform: CareerPlatform, args: argparse.Namespace) -> None:
+def handle_match(args: argparse.Namespace) -> None:
     """Handles the 'match' command."""
     print(f"\n--- Finding Career Matches (Grit: {args.grit}, Teamwork: {args.teamwork}) ---")
-    matches = platform.match_careers(args.grit, args.teamwork)
+    matches = match_careers(args.grit, args.teamwork)
     for job in matches:
         print(f"- {job}")
     print("\nStructure is gone. But your discipline remains.")
@@ -46,15 +46,14 @@ def main() -> None:
     match_parser.add_argument('--teamwork', type=int, default=9, help='Teamwork level (1-10)')
 
     args = parser.parse_args()
-    platform = CareerPlatform()
 
-    command_handlers: Dict[str, Callable[[CareerPlatform, argparse.Namespace], None]] = {
+    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
     }
 
     if args.command in command_handlers:
-        command_handlers[args.command](platform, args)
+        command_handlers[args.command](args)
     else:
         parser.print_help()
 

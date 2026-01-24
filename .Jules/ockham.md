@@ -11,3 +11,7 @@
 ## 2024-05-24 - CLI Control Flow Simplification
 **Observation:** `main.py` used nested `if/elif` statements for command routing, increasing cognitive load and hindering extensibility.
 **Action:** Refactored into `command_handlers` dictionary with isolated functions `handle_translate` and `handle_match` (Table-Driven Method).
+
+## 2026-01-24 - Unnecessary Class Wrapper
+**Observation:** `CareerPlatform` in `src/core/app.py` was a stateless class acting as a namespace for functions, introducing unnecessary indentation and "Kingdom of Nouns" complexity.
+**Action:** Removed `CareerPlatform` class and promoted `translate_skills` and `match_careers` to top-level module functions.
