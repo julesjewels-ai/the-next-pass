@@ -66,48 +66,45 @@ class AthleteProfile:
     sport: str
     role: str
 
-class CareerPlatform:
-    """Main controller for platform features."""
+def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
+    """
+    Translates raw athletic experiences into resume-ready bullet points.
 
-    def translate_skills(self, profile: AthleteProfile) -> Dict[str, str]:
-        """
-        Translates raw athletic experiences into resume-ready bullet points.
+    Args:
+        profile: The athlete's profile.
 
-        Args:
-            profile: The athlete's profile.
+    Returns:
+        Dictionary mapping the athletic concept to the corporate translation.
+    """
+    translations = {
+        corpo: SKILL_DB[athletic]
+        for corpo, athletic in UNIVERSAL_SKILLS.items()
+    }
 
-        Returns:
-            Dictionary mapping the athletic concept to the corporate translation.
-        """
-        translations = {
-            corpo: SKILL_DB[athletic]
-            for corpo, athletic in UNIVERSAL_SKILLS.items()
-        }
+    # Role Specific
+    for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
+        if role_keyword in profile.role:
+            translations[skill_name] = SKILL_DB[db_key]
 
-        # Role Specific
-        for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
-            if role_keyword in profile.role:
-                translations[skill_name] = SKILL_DB[db_key]
+    return translations
 
-        return translations
+def match_careers(grit_score: int, teamwork_score: int) -> List[str]:
+    """
+    Suggests careers based on soft-skill scoring.
 
-    def match_careers(self, grit_score: int, teamwork_score: int) -> List[str]:
-        """
-        Suggests careers based on soft-skill scoring.
+    Args:
+        grit_score: Int 1-10
+        teamwork_score: Int 1-10
 
-        Args:
-            grit_score: Int 1-10
-            teamwork_score: Int 1-10
+    Returns:
+        List of job titles.
+    """
+    matches = list(BASE_JOBS)
 
-        Returns:
-            List of job titles.
-        """
-        matches = list(BASE_JOBS)
+    if grit_score > HIGH_SCORE_THRESHOLD:
+        matches.extend(GRIT_JOBS)
 
-        if grit_score > HIGH_SCORE_THRESHOLD:
-            matches.extend(GRIT_JOBS)
+    if teamwork_score > HIGH_SCORE_THRESHOLD:
+        matches.extend(TEAMWORK_JOBS)
 
-        if teamwork_score > HIGH_SCORE_THRESHOLD:
-            matches.extend(TEAMWORK_JOBS)
-
-        return matches
+    return matches
