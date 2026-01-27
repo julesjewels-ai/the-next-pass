@@ -15,3 +15,7 @@
 ## 2024-05-25 - Kingdom of Nouns Removal
 **Observation:** `CareerPlatform` in `src/core/app.py` was a stateless class acting only as a namespace for functions, adding unnecessary boilerplate and instantiation.
 **Action:** Refactored methods into top-level functions `translate_skills` and `match_careers`, removing the class entirely.
+
+## 2026-01-27 - Dead Code Removal
+**Observation:** `SKILL_DB` in `src/core/app.py` contained unused keys `KEY_BENCH` and `KEY_REHAB` which were never referenced in any logic.
+**Action:** Removed unused constants and dictionary entries to reduce cognitive load and noise.
