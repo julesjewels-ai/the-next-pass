@@ -1,1 +1,1 @@
-"""Core logic package marker."""
+# src.core package

@@ -1,0 +1,2 @@
+2024-05-23: Initialized environment. Codebase contains basic MVP CLI with translation and matching logic. Verified existing tests pass.
+2024-05-23: Implemented Markdown Resume Export. Created `src/core/export.py` with `ResumeGenerator` protocol and `MarkdownResumeGenerator` implementation. Updated `main.py` to support `--output` argument. Verified with unit tests and manual CLI execution.
