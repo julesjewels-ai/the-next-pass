@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from typing import Dict, List
 
 # Domain Constants
-ROLE_CAPTAIN = "Captain"
 SKILL_LEADERSHIP = "Leadership"
 SKILL_TIME_MANAGEMENT = "Time Management"
 SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
@@ -41,7 +40,7 @@ UNIVERSAL_SKILLS = {
 
 # Mapping: Role Keyword -> (Output Skill Name, Database Key)
 ROLE_SKILL_MAPPINGS = {
-    ROLE_CAPTAIN: (SKILL_LEADERSHIP, KEY_CAPTAIN),
+    KEY_CAPTAIN: (SKILL_LEADERSHIP, KEY_CAPTAIN),
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
