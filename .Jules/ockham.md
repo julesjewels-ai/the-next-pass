@@ -19,3 +19,7 @@
 ## 2026-01-27 - Dead Code Removal
 **Observation:** `SKILL_DB` in `src/core/app.py` contained unused keys `KEY_BENCH` and `KEY_REHAB` which were never referenced in any logic.
 **Action:** Removed unused constants and dictionary entries to reduce cognitive load and noise.
+
+## 2026-01-27 - Redundant Constant Removal
+**Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
+**Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
