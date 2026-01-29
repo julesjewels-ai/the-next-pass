@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2026-01-27 - Functional Core Conversion
+**Observation:** Core logic in `translate_skills` and `match_careers` relied on imperative mutation (modifying lists/dicts) and control flow, obscuring the data transformation intent.
+**Action:** Refactored both functions into pure expressions using dictionary comprehensions and list unpacking, removing all side effects and intermediate variables.
