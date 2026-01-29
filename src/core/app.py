@@ -49,6 +49,7 @@ TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
 
 HIGH_SCORE_THRESHOLD = 8
 
+
 @dataclass
 class AthleteProfile:
     """Represents a student-athlete's basic background."""
