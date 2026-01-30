@@ -20,12 +20,13 @@ KEY_WORKOUTS = "5am Workouts"
 
 SKILL_DB = {
     KEY_CAPTAIN: (
-        "Demonstrated leadership by coordinating team activities and fostering a "
-        "collaborative environment under high-pressure conditions."
+        "Demonstrated leadership by coordinating team activities and "
+        "fostering a collaborative environment under high-pressure "
+        "conditions."
     ),
     KEY_FILM_STUDY: (
-        "Applied analytical skills to evaluate performance metrics and develop "
-        "strategic operational plans."
+        "Applied analytical skills to evaluate performance metrics and "
+        "develop strategic operational plans."
     ),
     KEY_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
@@ -48,6 +49,7 @@ GRIT_JOBS = ["Operations Manager (High Intensity)", "Logistics Specialist"]
 TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
 
 HIGH_SCORE_THRESHOLD = 8
+
 
 @dataclass
 class AthleteProfile:

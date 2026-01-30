@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2026-01-28 - Dead Code & Linting Cleanup
+**Observation:** `tests/test_core.py` contained unused `pytest` import. `src/core/app.py` violated line length limits.
+**Action:** Removed unused import and reformatted long strings to satisfy linter.
