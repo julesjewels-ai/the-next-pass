@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2025-02-18 - Domain Expansion
+**Observation:** `SKILL_DB` and `ROLE_SKILL_MAPPINGS` were limited to "Captain" and generic skills, failing to capture specific value of Goalkeepers (Risk Management) and Quarterbacks (Strategic Vision).
+**Action:** Expanded domain model with new constants and mappings to increase platform utility without increasing complexity.

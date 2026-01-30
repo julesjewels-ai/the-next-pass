@@ -1,0 +1,6 @@
+2025-02-18: Initialized project tracking.
+2025-02-18: Expanded Core Translation Engine.
+    - Added "Goalkeeper" -> "Risk Management".
+    - Added "Quarterback" -> "Strategic Vision".
+    - Updated app.py and tests/test_core.py.
+    - Verified with pytest, flake8, mypy.

@@ -12,24 +12,36 @@ from typing import Dict, List
 SKILL_LEADERSHIP = "Leadership"
 SKILL_TIME_MANAGEMENT = "Time Management"
 SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
+SKILL_RISK_MANAGEMENT = "Risk Management"
+SKILL_STRATEGIC_VISION = "Strategic Vision"
 
 # Skill Keys
 KEY_CAPTAIN = "Captain"
 KEY_FILM_STUDY = "Film Study"
 KEY_WORKOUTS = "5am Workouts"
+KEY_GOALKEEPER = "Goalkeeper"
+KEY_QUARTERBACK = "Quarterback"
 
 SKILL_DB = {
     KEY_CAPTAIN: (
-        "Demonstrated leadership by coordinating team activities and fostering a "
-        "collaborative environment under high-pressure conditions."
+        "Demonstrated leadership by coordinating team activities and "
+        "fostering a collaborative environment under high-pressure conditions."
     ),
     KEY_FILM_STUDY: (
-        "Applied analytical skills to evaluate performance metrics and develop "
-        "strategic operational plans."
+        "Applied analytical skills to evaluate performance metrics and "
+        "develop strategic operational plans."
     ),
     KEY_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
+    ),
+    KEY_GOALKEEPER: (
+        "Demonstrated high-stakes risk management and decisive "
+        "decision-making under pressure."
+    ),
+    KEY_QUARTERBACK: (
+        "Exhibited strategic vision by analyzing complex scenarios and "
+        "leading execution of game plans."
     )
 }
 
@@ -41,6 +53,8 @@ UNIVERSAL_SKILLS = {
 # Mapping: Role Keyword -> (Output Skill Name, Database Key)
 ROLE_SKILL_MAPPINGS = {
     KEY_CAPTAIN: (SKILL_LEADERSHIP, KEY_CAPTAIN),
+    KEY_GOALKEEPER: (SKILL_RISK_MANAGEMENT, KEY_GOALKEEPER),
+    KEY_QUARTERBACK: (SKILL_STRATEGIC_VISION, KEY_QUARTERBACK),
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
@@ -48,6 +62,7 @@ GRIT_JOBS = ["Operations Manager (High Intensity)", "Logistics Specialist"]
 TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
 
 HIGH_SCORE_THRESHOLD = 8
+
 
 @dataclass
 class AthleteProfile:
