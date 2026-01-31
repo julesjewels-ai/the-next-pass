@@ -1,0 +1,6 @@
+# Progress Log
+
+## Session Start
+-   **Status**: Completed.
+-   **Focus**: Refactor Core Logic to Clean Architecture (Pydantic DTOs, Service Layer).
+-   **Outcome**: Successfully decoupled data, models, and services. Tests passed.
