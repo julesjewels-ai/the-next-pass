@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2026-01-31 - Functional Core Adoption
+**Observation:** `match_careers` and `translate_skills` relied on imperative mutation and legacy type hints (`typing.List`), creating unnecessary statefulness and visual noise.
+**Action:** Refactored to use immutable tuple constants, functional unpacking/comprehensions, and modern standard library type hints.

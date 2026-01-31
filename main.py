@@ -6,7 +6,7 @@ to help student-athletes translate their skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable
+from collections.abc import Callable
 from src.core.app import AthleteProfile, translate_skills, match_careers
 
 def handle_translate(args: argparse.Namespace) -> None:
@@ -47,7 +47,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
+    command_handlers: dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
     }
