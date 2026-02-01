@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2026-01-27 - Imperative to Functional Refactor
+**Observation:** `src/core/services.py` relied on imperative list mutation (`extend`) and dictionary loops, which increased cognitive state tracking.
+**Action:** Refactored `translate_skills` and `match_careers` to use dictionary merging (`**`) and list unpacking (`*`) for immutable, declarative logic.

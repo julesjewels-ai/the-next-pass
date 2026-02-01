@@ -26,18 +26,18 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     Returns:
         Dictionary mapping the corporate skill name to the resume translation.
     """
-    # Start with universal skills
-    translations = {
-        corpo_skill: SKILL_DB[db_key]
-        for corpo_skill, db_key in UNIVERSAL_SKILLS.items()
+    universal_skills = {
+        corpo: SKILL_DB[db_key]
+        for corpo, db_key in UNIVERSAL_SKILLS.items()
     }
 
-    # Role Specific
-    for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
-        if role_keyword in profile.role:
-            translations[skill_name] = SKILL_DB[db_key]
+    role_skills = {
+        skill: SKILL_DB[db_key]
+        for keyword, (skill, db_key) in ROLE_SKILL_MAPPINGS.items()
+        if keyword in profile.role
+    }
 
-    return translations
+    return {**universal_skills, **role_skills}
 
 
 def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
@@ -51,12 +51,10 @@ def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
     Returns:
         List of Job DTOs.
     """
-    job_titles = list(BASE_JOBS)
-
-    if grit_score > HIGH_SCORE_THRESHOLD:
-        job_titles.extend(GRIT_JOBS)
-
-    if teamwork_score > HIGH_SCORE_THRESHOLD:
-        job_titles.extend(TEAMWORK_JOBS)
+    job_titles = [
+        *BASE_JOBS,
+        *(GRIT_JOBS if grit_score > HIGH_SCORE_THRESHOLD else []),
+        *(TEAMWORK_JOBS if teamwork_score > HIGH_SCORE_THRESHOLD else [])
+    ]
 
     return [Job(title=title) for title in job_titles]
