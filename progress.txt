@@ -4,3 +4,8 @@
 -   **Status**: Completed.
 -   **Focus**: Refactor Core Logic to Clean Architecture (Pydantic DTOs, Service Layer).
 -   **Outcome**: Successfully decoupled data, models, and services. Tests passed.
+
+## Session Update
+-   **Status**: Completed.
+-   **Focus**: Skill Translation Engine Expansion (Support more sports and roles).
+-   **Outcome**: Added `SPORT_SKILL_MAPPINGS` for Basketball and Swimming. Added "Walk-on" role mapping. Updated services and added tests.

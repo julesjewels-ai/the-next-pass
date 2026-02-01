@@ -37,3 +37,30 @@ def test_career_matching_high_teamwork():
     jobs = match_careers(grit_score=5, teamwork_score=9)
     titles = [job.title for job in jobs]
     assert "Customer Success Manager" in titles
+
+
+def test_skill_translation_basketball():
+    """Test that basketball players get decision making skills."""
+    profile = AthleteProfile(sport="Basketball", role="Player")
+    result = translate_skills(profile)
+
+    assert "Rapid Decision Making" in result
+    assert "make high-stakes decisions" in result["Rapid Decision Making"]
+
+
+def test_skill_translation_swimming():
+    """Test that swimmers get goal setting skills."""
+    profile = AthleteProfile(sport="Swimming", role="Player")
+    result = translate_skills(profile)
+
+    assert "Goal Setting" in result
+    assert "data-driven goal setting" in result["Goal Setting"]
+
+
+def test_skill_translation_walkon():
+    """Test that walk-ons get resilience skills."""
+    profile = AthleteProfile(sport="Football", role="Walk-on")
+    result = translate_skills(profile)
+
+    assert "Resilience" in result
+    assert "Proved resilience" in result["Resilience"]
