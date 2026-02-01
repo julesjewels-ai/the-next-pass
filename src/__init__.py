@@ -1,1 +1,1 @@
-"""Source package marker."""
+"""Source package."""
