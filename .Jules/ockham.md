@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2026-02-12 - Functional List Construction and Type Modernization
+**Observation:** `match_careers` in `src/core/services.py` used imperative `list.extend` mutation, increasing state tracking. Also, `src/core/services.py` and `main.py` used deprecated `typing` module imports (`List`, `Dict`) instead of modern built-ins (`list`, `dict`).
+**Action:** Refactored `match_careers` to use declarative list unpacking `[*a, *b]` for immutability. Replaced `typing` imports with built-in types and `collections.abc.Callable` to adhere to modern Python standards and simplify imports.

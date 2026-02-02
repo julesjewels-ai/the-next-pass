@@ -2,8 +2,6 @@
 Service layer for The 98% Platform.
 Handles business logic for skill translation and career matching.
 """
-from typing import List, Dict
-
 from src.core.models import AthleteProfile, Job
 from src.core.data import (
     SKILL_DB,
@@ -16,7 +14,7 @@ from src.core.data import (
 )
 
 
-def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
+def translate_skills(profile: AthleteProfile) -> dict[str, str]:
     """
     Translates raw athletic experiences into resume-ready bullet points.
 
@@ -40,7 +38,7 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     return translations
 
 
-def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
+def match_careers(grit_score: int, teamwork_score: int) -> list[Job]:
     """
     Suggests careers based on soft-skill scoring.
 
@@ -51,12 +49,10 @@ def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
     Returns:
         List of Job DTOs.
     """
-    job_titles = list(BASE_JOBS)
-
-    if grit_score > HIGH_SCORE_THRESHOLD:
-        job_titles.extend(GRIT_JOBS)
-
-    if teamwork_score > HIGH_SCORE_THRESHOLD:
-        job_titles.extend(TEAMWORK_JOBS)
+    job_titles = [
+        *BASE_JOBS,
+        *(GRIT_JOBS if grit_score > HIGH_SCORE_THRESHOLD else []),
+        *(TEAMWORK_JOBS if teamwork_score > HIGH_SCORE_THRESHOLD else []),
+    ]
 
     return [Job(title=title) for title in job_titles]
