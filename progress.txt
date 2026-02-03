@@ -4,3 +4,8 @@
 -   **Status**: Completed.
 -   **Focus**: Expand Skill Translation Engine.
 -   **Outcome**: Added support for Basketball, Football, and Walk-on roles. Implemented sport-specific skill mapping in `src/core/services.py` using Table-Driven Methods. Verified with tests.
+
+## Session Update
+-   **Status**: Completed.
+-   **Focus**: Implement Advanced Mapping Logic (Composite Skills).
+-   **Outcome**: Implemented `COMPOSITE_SKILL_MAPPINGS` to support specific skill generation for Sport+Role combinations (e.g., Football Captain). Validated with new unit tests and complexity analysis.
