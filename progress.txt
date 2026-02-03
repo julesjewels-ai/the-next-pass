@@ -4,3 +4,8 @@
 -   **Status**: Completed.
 -   **Focus**: Expand Skill Translation Engine.
 -   **Outcome**: Added support for Basketball, Football, and Walk-on roles. Implemented sport-specific skill mapping in `src/core/services.py` using Table-Driven Methods. Verified with tests.
+
+## 2026-02-03 - Refactoring
+-   **Status**: In Progress (Ockham).
+-   **Focus**: Refactoring `src/core/services.py`.
+-   **Outcome**: Consolidated duplicate logic in `translate_skills`. Reduced complexity from 6 to 5.

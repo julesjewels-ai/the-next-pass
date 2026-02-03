@@ -23,3 +23,7 @@
 ## 2026-01-27 - Redundant Constant Removal
 **Observation:** `ROLE_CAPTAIN` and `KEY_CAPTAIN` in `src/core/app.py` were identical strings used for coupled concepts (Role Trigger vs DB Key), adding unnecessary namespace pollution.
 **Action:** Merged `ROLE_CAPTAIN` into `KEY_CAPTAIN` to enforce strict mapping between trigger keywords and database keys.
+
+## 2026-02-03 - Skill Translation Loop Consolidation
+**Observation:** `translate_skills` in `src/core/services.py` contained identical loop structures for Sport and Role mappings, violating DRY and increasing cognitive load.
+**Action:** Consolidated duplicate loops into a single iteration over a list of mappings, reducing code volume and simplifying logic.
