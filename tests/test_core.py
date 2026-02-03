@@ -24,6 +24,33 @@ def test_skill_translation_universal():
     assert "balancing 30+ hour training" in result["Time Management"]
 
 
+def test_skill_translation_basketball():
+    """Test that basketball players get team collaboration skills."""
+    profile = AthleteProfile(sport="Basketball", role="Point Guard")
+    result = translate_skills(profile)
+
+    assert "Team Collaboration" in result
+    assert "rapid decision-making" in result["Team Collaboration"]
+
+
+def test_skill_translation_football():
+    """Test that football players get strategic execution skills."""
+    profile = AthleteProfile(sport="Football", role="Quarterback")
+    result = translate_skills(profile)
+
+    assert "Strategic Execution" in result
+    assert "precise coordination" in result["Strategic Execution"]
+
+
+def test_skill_translation_walkon():
+    """Test that walk-ons get resilience skills."""
+    profile = AthleteProfile(sport="Track", role="Walk-on")
+    result = translate_skills(profile)
+
+    assert "Resilience" in result
+    assert "merit-based competition" in result["Resilience"]
+
+
 def test_career_matching_high_grit():
     """Test that high grit scores return operations roles."""
     jobs = match_careers(grit_score=9, teamwork_score=5)

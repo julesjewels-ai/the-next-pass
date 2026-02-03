@@ -2,5 +2,5 @@
 
 ## Session Start
 -   **Status**: Completed.
--   **Focus**: Refactor Core Logic to Clean Architecture (Pydantic DTOs, Service Layer).
--   **Outcome**: Successfully decoupled data, models, and services. Tests passed.
+-   **Focus**: Expand Skill Translation Engine.
+-   **Outcome**: Added support for Basketball, Football, and Walk-on roles. Implemented sport-specific skill mapping in `src/core/services.py` using Table-Driven Methods. Verified with tests.

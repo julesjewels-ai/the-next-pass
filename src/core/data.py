@@ -7,11 +7,17 @@ Stores static mappings and database constants.
 SKILL_LEADERSHIP = "Leadership"
 SKILL_TIME_MANAGEMENT = "Time Management"
 SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
+SKILL_TEAM_COLLABORATION = "Team Collaboration"
+SKILL_STRATEGIC_EXECUTION = "Strategic Execution"
+SKILL_RESILIENCE = "Resilience"
 
 # Skill Keys
 KEY_CAPTAIN = "Captain"
 KEY_FILM_STUDY = "Film Study"
 KEY_WORKOUTS = "5am Workouts"
+KEY_BASKETBALL = "Basketball"
+KEY_FOOTBALL = "Football"
+KEY_WALKON = "Walk-on"
 
 SKILL_DB = {
     KEY_CAPTAIN: (
@@ -25,6 +31,18 @@ SKILL_DB = {
     KEY_WORKOUTS: (
         "Exhibited exceptional self-discipline and time management skills, "
         "balancing 30+ hour training weeks with academic responsibilities."
+    ),
+    KEY_BASKETBALL: (
+        "Facilitated seamless team operations through constant communication "
+        "and rapid decision-making in fast-paced environments."
+    ),
+    KEY_FOOTBALL: (
+        "Executed complex strategic plans under strict time constraints, "
+        "requiring precise coordination with team members."
+    ),
+    KEY_WALKON: (
+        "Demonstrated exceptional grit and adaptability by earning a "
+        "position through merit-based competition against recruited peers."
     )
 }
 
@@ -33,9 +51,16 @@ UNIVERSAL_SKILLS = {
     SKILL_STRATEGIC_ANALYSIS: KEY_FILM_STUDY
 }
 
+# Mapping: Sport Name -> (Output Skill Name, Database Key)
+SPORT_SKILL_MAPPINGS = {
+    KEY_BASKETBALL: (SKILL_TEAM_COLLABORATION, KEY_BASKETBALL),
+    KEY_FOOTBALL: (SKILL_STRATEGIC_EXECUTION, KEY_FOOTBALL),
+}
+
 # Mapping: Role Keyword -> (Output Skill Name, Database Key)
 ROLE_SKILL_MAPPINGS = {
     KEY_CAPTAIN: (SKILL_LEADERSHIP, KEY_CAPTAIN),
+    KEY_WALKON: (SKILL_RESILIENCE, KEY_WALKON),
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
