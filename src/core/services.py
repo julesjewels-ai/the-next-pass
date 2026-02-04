@@ -10,6 +10,7 @@ from src.core.data import (
     UNIVERSAL_SKILLS,
     ROLE_SKILL_MAPPINGS,
     SPORT_SKILL_MAPPINGS,
+    COMPOSITE_SKILL_MAPPINGS,
     BASE_JOBS,
     GRIT_JOBS,
     TEAMWORK_JOBS,
@@ -42,6 +43,11 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
         if role_keyword in profile.role:
             translations[skill_name] = SKILL_DB[db_key]
+
+    # Composite Specific
+    for (sport, role), (skill, db_key) in COMPOSITE_SKILL_MAPPINGS.items():
+        if sport in profile.sport and role in profile.role:
+            translations[skill] = SKILL_DB[db_key]
 
     return translations
 

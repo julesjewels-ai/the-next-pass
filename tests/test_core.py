@@ -64,3 +64,18 @@ def test_career_matching_high_teamwork():
     jobs = match_careers(grit_score=5, teamwork_score=9)
     titles = [job.title for job in jobs]
     assert "Customer Success Manager" in titles
+
+
+def test_skill_translation_football_captain():
+    """Test that football captains get operational strategy skills."""
+    profile = AthleteProfile(sport="Football", role="Team Captain")
+    result = translate_skills(profile)
+
+    assert "Operational Strategy" in result
+    assert (
+        "Orchestrated complex offensive plays"
+        in result["Operational Strategy"]
+    )
+    # Ensure they also get the individual skills
+    assert "Strategic Execution" in result
+    assert "Leadership" in result
