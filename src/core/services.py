@@ -33,15 +33,16 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
         for corpo_skill, db_key in UNIVERSAL_SKILLS.items()
     }
 
-    # Sport Specific
-    for sport_keyword, (skill_name, db_key) in SPORT_SKILL_MAPPINGS.items():
-        if sport_keyword in profile.sport:
-            translations[skill_name] = SKILL_DB[db_key]
+    # Consolidated mappings processing
+    mapping_sources = [
+        (SPORT_SKILL_MAPPINGS, profile.sport),
+        (ROLE_SKILL_MAPPINGS, profile.role),
+    ]
 
-    # Role Specific
-    for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
-        if role_keyword in profile.role:
-            translations[skill_name] = SKILL_DB[db_key]
+    for mapping, field_value in mapping_sources:
+        for keyword, (skill_name, db_key) in mapping.items():
+            if keyword in field_value:
+                translations[skill_name] = SKILL_DB[db_key]
 
     return translations
 
