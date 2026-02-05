@@ -10,9 +10,11 @@ SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
 SKILL_TEAM_COLLABORATION = "Team Collaboration"
 SKILL_STRATEGIC_EXECUTION = "Strategic Execution"
 SKILL_RESILIENCE = "Resilience"
+SKILL_ACADEMIC_EXCELLENCE = "Academic Excellence"
 
 # Skill Keys
 KEY_CAPTAIN = "Captain"
+KEY_ACADEMIC = "Scholar Athlete"
 KEY_FILM_STUDY = "Film Study"
 KEY_WORKOUTS = "5am Workouts"
 KEY_BASKETBALL = "Basketball"
@@ -43,6 +45,10 @@ SKILL_DB = {
     KEY_WALKON: (
         "Demonstrated exceptional grit and adaptability by earning a "
         "position through merit-based competition against recruited peers."
+    ),
+    KEY_ACADEMIC: (
+        "Maintained high academic standing while managing rigorous training "
+        "schedules, demonstrating strong intellectual capability and focus."
     )
 }
 

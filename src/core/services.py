@@ -13,8 +13,17 @@ from src.core.data import (
     BASE_JOBS,
     GRIT_JOBS,
     TEAMWORK_JOBS,
-    HIGH_SCORE_THRESHOLD
+    HIGH_SCORE_THRESHOLD,
+    SKILL_ACADEMIC_EXCELLENCE,
+    KEY_ACADEMIC
 )
+
+
+def _resolve_academic_skills(gpa: float) -> Dict[str, str]:
+    """Helper to inject academic skills based on GPA."""
+    if gpa >= 3.5:
+        return {SKILL_ACADEMIC_EXCELLENCE: SKILL_DB[KEY_ACADEMIC]}
+    return {}
 
 
 def _resolve_skills(mapping: Dict[str, tuple[str, str]], source: str) -> Dict[str, str]:
@@ -40,6 +49,7 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
         **{k: SKILL_DB[v] for k, v in UNIVERSAL_SKILLS.items()},
         **_resolve_skills(SPORT_SKILL_MAPPINGS, profile.sport),
         **_resolve_skills(ROLE_SKILL_MAPPINGS, profile.role),
+        **_resolve_academic_skills(profile.gpa),
     }
 
 

@@ -9,3 +9,8 @@
 -   **Status**: Completed.
 -   **Focus**: Complexity reduction in `src/core/services.py`.
 -   **Outcome**: Refactored `translate_skills` to use functional dictionary unpacking, reducing complexity from 6 to 2.
+
+## 2026-02-05 - Multi-factor Mapping (GPA)
+-   **Status**: Completed.
+-   **Focus**: Implement advanced mapping logic.
+-   **Outcome**: Added GPA factor to skill translation. Updated `AthleteProfile` with `gpa` field, added `SKILL_ACADEMIC_EXCELLENCE` constant, and implemented `_resolve_academic_skills` logic. Verified with tests and CLI check.

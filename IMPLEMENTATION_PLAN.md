@@ -8,7 +8,7 @@
 
 2.  **Skill Translation Engine Expansion (Current)**
     -   [x] Support more sports and roles.
-    -   [ ] Implement advanced mapping logic (e.g. multi-factor mapping).
+    -   [x] Implement advanced mapping logic (e.g. multi-factor mapping).
 
 3.  **Employer Matching Enhancements**
     -   [ ] Add "Employer" entity.
@@ -16,4 +16,4 @@
 
 ## Current Gap Analysis
 -   **Type Safety**: Runtime validation enabled via Pydantic.
--   **Testing**: Coverage for new sports and roles added.
+-   **Testing**: Coverage for new sports, roles, and GPA factor added.

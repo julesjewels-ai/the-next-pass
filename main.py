@@ -14,7 +14,7 @@ from src.core.services import translate_skills, match_careers
 
 def handle_translate(args: argparse.Namespace) -> None:
     """Handles the 'translate' command."""
-    profile = AthleteProfile(sport=args.sport, role=args.role)
+    profile = AthleteProfile(sport=args.sport, role=args.role, gpa=args.gpa)
     result = translate_skills(profile)
     print(f"\n--- Resume Translation for {args.sport} {args.role} ---")
     for raw, corpo in result.items():
@@ -63,6 +63,12 @@ def main() -> None:
         type=str,
         default='Player',
         help='Role within the team (e.g., Captain, Starter)'
+    )
+    translate_parser.add_argument(
+        '--gpa',
+        type=float,
+        default=0.0,
+        help='Grade Point Average (0.0-4.0)'
     )
 
     # Command: match

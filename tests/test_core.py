@@ -51,6 +51,23 @@ def test_skill_translation_walkon():
     assert "merit-based competition" in result["Resilience"]
 
 
+def test_skill_translation_high_gpa():
+    """Test that high GPA triggers academic excellence skill."""
+    profile = AthleteProfile(sport="Swimming", role="Student", gpa=3.8)
+    result = translate_skills(profile)
+
+    assert "Academic Excellence" in result
+    assert "intellectual capability" in result["Academic Excellence"]
+
+
+def test_skill_translation_low_gpa():
+    """Test that low GPA does not trigger academic excellence skill."""
+    profile = AthleteProfile(sport="Swimming", role="Student", gpa=3.0)
+    result = translate_skills(profile)
+
+    assert "Academic Excellence" not in result
+
+
 def test_career_matching_high_grit():
     """Test that high grit scores return operations roles."""
     jobs = match_careers(grit_score=9, teamwork_score=5)
