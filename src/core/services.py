@@ -17,6 +17,15 @@ from src.core.data import (
 )
 
 
+def _resolve_skills(mapping: Dict[str, tuple[str, str]], source: str) -> Dict[str, str]:
+    """Helper to extract skills from mappings based on substring containment."""
+    return {
+        skill_name: SKILL_DB[db_key]
+        for keyword, (skill_name, db_key) in mapping.items()
+        if keyword in source
+    }
+
+
 def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     """
     Translates raw athletic experiences into resume-ready bullet points.
@@ -27,23 +36,11 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     Returns:
         Dictionary mapping the corporate skill name to the resume translation.
     """
-    # Start with universal skills
-    translations = {
-        corpo_skill: SKILL_DB[db_key]
-        for corpo_skill, db_key in UNIVERSAL_SKILLS.items()
+    return {
+        **{k: SKILL_DB[v] for k, v in UNIVERSAL_SKILLS.items()},
+        **_resolve_skills(SPORT_SKILL_MAPPINGS, profile.sport),
+        **_resolve_skills(ROLE_SKILL_MAPPINGS, profile.role),
     }
-
-    # Sport Specific
-    for sport_keyword, (skill_name, db_key) in SPORT_SKILL_MAPPINGS.items():
-        if sport_keyword in profile.sport:
-            translations[skill_name] = SKILL_DB[db_key]
-
-    # Role Specific
-    for role_keyword, (skill_name, db_key) in ROLE_SKILL_MAPPINGS.items():
-        if role_keyword in profile.role:
-            translations[skill_name] = SKILL_DB[db_key]
-
-    return translations
 
 
 def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
