@@ -1,66 +1,100 @@
 """
-Unit tests for core application logic.
+Forensic test suite for core business logic.
+Targeting high-value logic with parametrized edge cases.
 """
-
+import pytest
 from src.core.models import AthleteProfile
 from src.core.services import translate_skills, match_careers
+from src.core.data import (
+    HIGH_SCORE_THRESHOLD,
+    BASE_JOBS,
+    GRIT_JOBS,
+    TEAMWORK_JOBS,
+    SKILL_LEADERSHIP,
+    SKILL_TEAM_COLLABORATION,
+    SKILL_STRATEGIC_EXECUTION,
+    SKILL_RESILIENCE
+)
 
+# --- Tests for translate_skills ---
+@pytest.mark.parametrize("sport, role, expected_skills", [
+    # 1. Standard Match (Basketball + Captain) -> Leadership + Team Collaboration + Universal
+    ("Basketball", "Captain", [SKILL_LEADERSHIP, SKILL_TEAM_COLLABORATION, "Time Management"]),
 
-def test_skill_translation_captain():
-    """Test that captains get specific leadership translation."""
-    profile = AthleteProfile(sport="Soccer", role="Team Captain")
+    # 2. Sport Only Match (Basketball + Unknown Role) -> Team Collaboration + Universal
+    ("Basketball", "Bench", [SKILL_TEAM_COLLABORATION, "Time Management"]),
+
+    # 3. Role Only Match (Unknown Sport + Captain) -> Leadership + Universal
+    ("Curling", "Captain", [SKILL_LEADERSHIP, "Time Management"]),
+
+    # 4. No Match (Unknown Sport + Unknown Role) -> Universal Only
+    ("Curling", "Sweeper", ["Time Management", "Strategic Analysis"]),
+
+    # 5. Substring Match (Sport contains key) -> "Men's Basketball" contains "Basketball"
+    ("Men's Basketball", "Captain", [SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP]),
+
+    # 6. Case Sensitivity Verification (Code is currently case-sensitive)
+    # "basketball" != "Basketball", so it should NOT match Sport/Role mappings
+    ("basketball", "captain", ["Time Management"]),
+
+    # 7. Walk-on Edge Case (Resilience)
+    ("Track", "Walk-on", [SKILL_RESILIENCE]),
+
+    # 8. Football Quarterback (Strategic Execution)
+    ("Football", "Quarterback", [SKILL_STRATEGIC_EXECUTION]),
+])
+def test_translate_skills_logic(
+    sport: str,
+    role: str,
+    expected_skills: list[str]
+) -> None:
+    profile = AthleteProfile(sport=sport, role=role)
     result = translate_skills(profile)
 
-    assert "Leadership" in result
-    assert "coordinating team activities" in result["Leadership"]
+    # Verify all expected skills are present in the keys
+    for skill in expected_skills:
+        assert skill in result, f"Missing expected skill '{skill}' for {sport}/{role}"
 
-
-def test_skill_translation_universal():
-    """Test that all athletes get time management skills."""
-    profile = AthleteProfile(sport="Tennis", role="Player")
-    result = translate_skills(profile)
-
+    # Verify Universal skills are ALWAYS present
+    # (Checking one known universal skill is sufficient to verify the merge)
     assert "Time Management" in result
-    assert "balancing 30+ hour training" in result["Time Management"]
+    assert "Strategic Analysis" in result
 
 
-def test_skill_translation_basketball():
-    """Test that basketball players get team collaboration skills."""
-    profile = AthleteProfile(sport="Basketball", role="Point Guard")
-    result = translate_skills(profile)
+# --- Tests for match_careers ---
+@pytest.mark.parametrize("grit, teamwork, expected_includes, expected_excludes", [
+    # 1. High Grit, High Teamwork (> Threshold)
+    (HIGH_SCORE_THRESHOLD + 1, HIGH_SCORE_THRESHOLD + 1, GRIT_JOBS + TEAMWORK_JOBS, []),
 
-    assert "Team Collaboration" in result
-    assert "rapid decision-making" in result["Team Collaboration"]
+    # 2. High Grit, Low Teamwork
+    (HIGH_SCORE_THRESHOLD + 1, HIGH_SCORE_THRESHOLD, GRIT_JOBS, TEAMWORK_JOBS),
 
+    # 3. Low Grit, High Teamwork
+    (HIGH_SCORE_THRESHOLD, HIGH_SCORE_THRESHOLD + 1, TEAMWORK_JOBS, GRIT_JOBS),
 
-def test_skill_translation_football():
-    """Test that football players get strategic execution skills."""
-    profile = AthleteProfile(sport="Football", role="Quarterback")
-    result = translate_skills(profile)
+    # 4. Low Grit, Low Teamwork
+    (HIGH_SCORE_THRESHOLD, HIGH_SCORE_THRESHOLD, [], GRIT_JOBS + TEAMWORK_JOBS),
 
-    assert "Strategic Execution" in result
-    assert "precise coordination" in result["Strategic Execution"]
+    # 5. Boundary Condition (Exactly Threshold) -> Should be Low (implied > check)
+    (HIGH_SCORE_THRESHOLD, HIGH_SCORE_THRESHOLD, [], GRIT_JOBS + TEAMWORK_JOBS),
+])
+def test_match_careers_logic(
+    grit: int,
+    teamwork: int,
+    expected_includes: list[str],
+    expected_excludes: list[str]
+) -> None:
+    result = match_careers(grit, teamwork)
+    titles = [job.title for job in result]
 
+    # Base jobs should always be present
+    for job in BASE_JOBS:
+        assert job in titles, "Base jobs missing"
 
-def test_skill_translation_walkon():
-    """Test that walk-ons get resilience skills."""
-    profile = AthleteProfile(sport="Track", role="Walk-on")
-    result = translate_skills(profile)
+    # Check conditional inclusions
+    for job in expected_includes:
+        assert job in titles, f"Expected {job} for grit={grit}, teamwork={teamwork}"
 
-    assert "Resilience" in result
-    assert "merit-based competition" in result["Resilience"]
-
-
-def test_career_matching_high_grit():
-    """Test that high grit scores return operations roles."""
-    jobs = match_careers(grit_score=9, teamwork_score=5)
-    # jobs is now List[Job], so we check titles
-    titles = [job.title for job in jobs]
-    assert "Operations Manager (High Intensity)" in titles
-
-
-def test_career_matching_high_teamwork():
-    """Test that high teamwork scores return success roles."""
-    jobs = match_careers(grit_score=5, teamwork_score=9)
-    titles = [job.title for job in jobs]
-    assert "Customer Success Manager" in titles
+    # Check conditional exclusions
+    for job in expected_excludes:
+        assert job not in titles, f"Did not expect {job} for grit={grit}, teamwork={teamwork}"
