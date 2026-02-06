@@ -27,3 +27,7 @@
 ## 2026-02-05 - Functional Refactor of Skill Translation
 **Observation:** `translate_skills` in `src/core/services.py` used repetitive imperative loops to mutate a dictionary, obscuring the simple mapping logic.
 **Action:** Extracted `_resolve_skills` helper and used dictionary unpacking to flatten the function into a single declarative expression (Complexity 6 -> 2).
+
+## 2026-02-06 - Dead Code Removal
+**Observation:** `Skill` class in `src/core/models.py` was defined but never used in the application logic or tests.
+**Action:** Removed the `Skill` class to reduce codebase noise and prevent confusion about unused data models.

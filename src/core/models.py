@@ -10,12 +10,6 @@ class AthleteProfile(BaseModel):
     role: str = Field(..., description="The role or position within the team")
 
 
-class Skill(BaseModel):
-    """Represents a translated skill."""
-    name: str = Field(..., description="The corporate skill name")
-    description: str = Field(..., description="The resume-ready description")
-
-
 class Job(BaseModel):
     """Represents a job opportunity."""
     title: str = Field(..., description="The job title")
