@@ -10,6 +10,7 @@ SKILL_STRATEGIC_ANALYSIS = "Strategic Analysis"
 SKILL_TEAM_COLLABORATION = "Team Collaboration"
 SKILL_STRATEGIC_EXECUTION = "Strategic Execution"
 SKILL_RESILIENCE = "Resilience"
+SKILL_OPERATIONAL_COMMAND = "Operational Command"
 
 # Skill Keys
 KEY_CAPTAIN = "Captain"
@@ -18,6 +19,7 @@ KEY_WORKOUTS = "5am Workouts"
 KEY_BASKETBALL = "Basketball"
 KEY_FOOTBALL = "Football"
 KEY_WALKON = "Walk-on"
+KEY_FOOTBALL_CAPTAIN = "Football Captain"
 
 SKILL_DB = {
     KEY_CAPTAIN: (
@@ -43,6 +45,10 @@ SKILL_DB = {
     KEY_WALKON: (
         "Demonstrated exceptional grit and adaptability by earning a "
         "position through merit-based competition against recruited peers."
+    ),
+    KEY_FOOTBALL_CAPTAIN: (
+        "Directed large-scale team maneuvers and maintained operational "
+        "cohesion under strict play clocks."
     )
 }
 
@@ -61,6 +67,11 @@ SPORT_SKILL_MAPPINGS = {
 ROLE_SKILL_MAPPINGS = {
     KEY_CAPTAIN: (SKILL_LEADERSHIP, KEY_CAPTAIN),
     KEY_WALKON: (SKILL_RESILIENCE, KEY_WALKON),
+}
+
+# Mapping: (Sport Keyword, Role Keyword) -> (Output Skill Name, Database Key)
+COMPOSITE_SKILL_MAPPINGS = {
+    (KEY_FOOTBALL, KEY_CAPTAIN): (SKILL_OPERATIONAL_COMMAND, KEY_FOOTBALL_CAPTAIN),
 }
 
 BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]

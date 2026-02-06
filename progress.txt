@@ -9,3 +9,8 @@
 -   **Status**: Completed.
 -   **Focus**: Complexity reduction in `src/core/services.py`.
 -   **Outcome**: Refactored `translate_skills` to use functional dictionary unpacking, reducing complexity from 6 to 2.
+
+## 2026-02-05 - Multi-factor Skill Mapping
+-   **Status**: Completed.
+-   **Focus**: Implement advanced mapping logic.
+-   **Outcome**: Implemented `COMPOSITE_SKILL_MAPPINGS` to support skills derived from both Sport and Role (e.g., Football Captain -> Operational Command). Added data, logic, and tests.
