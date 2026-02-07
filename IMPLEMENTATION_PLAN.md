@@ -8,7 +8,7 @@
 
 2.  **Skill Translation Engine Expansion (Current)**
     -   [x] Support more sports and roles.
-    -   [ ] Implement advanced mapping logic (e.g. multi-factor mapping).
+    -   [x] Implement advanced mapping logic (e.g. multi-factor mapping).
 
 3.  **Employer Matching Enhancements**
     -   [ ] Add "Employer" entity.

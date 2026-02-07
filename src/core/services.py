@@ -10,6 +10,7 @@ from src.core.data import (
     UNIVERSAL_SKILLS,
     ROLE_SKILL_MAPPINGS,
     SPORT_SKILL_MAPPINGS,
+    COMPOSITE_SKILL_MAPPINGS,
     BASE_JOBS,
     GRIT_JOBS,
     TEAMWORK_JOBS,
@@ -23,6 +24,18 @@ def _resolve_skills(mapping: Dict[str, tuple[str, str]], source: str) -> Dict[st
         skill_name: SKILL_DB[db_key]
         for keyword, (skill_name, db_key) in mapping.items()
         if keyword in source
+    }
+
+
+def _resolve_composite_skills(
+    mapping: Dict[tuple[str, str], tuple[str, str]],
+    profile: AthleteProfile
+) -> Dict[str, str]:
+    """Helper to extract skills from composite mappings (Sport + Role)."""
+    return {
+        skill_name: SKILL_DB[db_key]
+        for (sport_kw, role_kw), (skill_name, db_key) in mapping.items()
+        if sport_kw in profile.sport and role_kw in profile.role
     }
 
 
@@ -40,6 +53,7 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
         **{k: SKILL_DB[v] for k, v in UNIVERSAL_SKILLS.items()},
         **_resolve_skills(SPORT_SKILL_MAPPINGS, profile.sport),
         **_resolve_skills(ROLE_SKILL_MAPPINGS, profile.role),
+        **_resolve_composite_skills(COMPOSITE_SKILL_MAPPINGS, profile),
     }
 
 
