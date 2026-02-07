@@ -1,6 +1,7 @@
 """
 Domain models for The 98% Platform.
 """
+from typing import List
 from pydantic import BaseModel, Field
 
 
@@ -19,3 +20,10 @@ class Skill(BaseModel):
 class Job(BaseModel):
     """Represents a job opportunity."""
     title: str = Field(..., description="The job title")
+
+
+class Employer(BaseModel):
+    """Represents a hiring partner."""
+    name: str = Field(..., description="The company name")
+    industry: str = Field(..., description="The industry sector")
+    required_skills: List[str] = Field(..., description="List of required skills")
