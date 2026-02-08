@@ -3,7 +3,7 @@ Unit tests for core application logic.
 """
 
 from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers
+from src.core.services import translate_skills, match_careers, match_employers
 
 
 def test_skill_translation_captain():
@@ -73,3 +73,31 @@ def test_skill_translation_composite_football_captain():
 
     assert "Operational Command" in result
     assert "large-scale team maneuvers" in result["Operational Command"]
+
+
+def test_employer_matching_techcorp():
+    """Test that a Team Captain matches TechCorp (Leadership + Strategic Analysis)."""
+    profile = AthleteProfile(sport="Soccer", role="Team Captain")
+    employers = match_employers(profile)
+
+    names = [e.name for e in employers]
+    assert "TechCorp" in names
+
+
+def test_employer_matching_no_match():
+    """Test that a standard player does not match TechCorp (lacks Leadership)."""
+    profile = AthleteProfile(sport="Tennis", role="Player")
+    employers = match_employers(profile)
+
+    names = [e.name for e in employers]
+    assert "TechCorp" not in names
+
+
+def test_employer_matching_logistics_composite():
+    """Test matching for LogisticsInc (requires Operational Command + Resilience)."""
+    # Needs Football Captain (Operational Command) AND Walk-on (Resilience)
+    profile = AthleteProfile(sport="Football", role="Walk-on Captain")
+    employers = match_employers(profile)
+
+    names = [e.name for e in employers]
+    assert "LogisticsInc" in names

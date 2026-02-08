@@ -19,3 +19,8 @@
 -   **Status**: Completed.
 -   **Focus**: Domain Modeling.
 -   **Outcome**: Added `Employer` model in `src/core/models.py`, `SAMPLE_EMPLOYERS` in `src/core/data.py`, and verified with `tests/test_models.py`.
+
+## 2026-02-05 - Implement Employer Matching
+-   **Status**: Completed.
+-   **Focus**: Implement matching based on specific requirements.
+-   **Outcome**: Added `match_employers` function in `src/core/services.py` that matches athlete skills to employer requirements. Verified with tests in `tests/test_core.py` with 100% coverage.
