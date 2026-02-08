@@ -2,6 +2,7 @@
 Data layer for The 98% Platform.
 Stores static mappings and database constants.
 """
+from src.core.models import Employer
 
 # Domain Constants
 SKILL_LEADERSHIP = "Leadership"
@@ -79,3 +80,21 @@ GRIT_JOBS = ["Operations Manager (High Intensity)", "Logistics Specialist"]
 TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
 
 HIGH_SCORE_THRESHOLD = 8
+
+SAMPLE_EMPLOYERS = [
+    Employer(
+        name="TechCorp",
+        industry="Technology",
+        required_skills=[SKILL_LEADERSHIP, SKILL_STRATEGIC_ANALYSIS]
+    ),
+    Employer(
+        name="LogisticsInc",
+        industry="Supply Chain",
+        required_skills=[SKILL_OPERATIONAL_COMMAND, SKILL_RESILIENCE]
+    ),
+    Employer(
+        name="ConsultingGroup",
+        industry="Consulting",
+        required_skills=[SKILL_STRATEGIC_EXECUTION, SKILL_TEAM_COLLABORATION]
+    )
+]

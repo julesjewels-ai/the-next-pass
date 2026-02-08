@@ -14,3 +14,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement advanced mapping logic.
 -   **Outcome**: Implemented `COMPOSITE_SKILL_MAPPINGS` to support skills derived from both Sport and Role (e.g., Football Captain -> Operational Command). Added data, logic, and tests.
+
+## 2026-02-05 - Add Employer Entity
+-   **Status**: Completed.
+-   **Focus**: Domain Modeling.
+-   **Outcome**: Added `Employer` model in `src/core/models.py`, `SAMPLE_EMPLOYERS` in `src/core/data.py`, and verified with `tests/test_models.py`.
