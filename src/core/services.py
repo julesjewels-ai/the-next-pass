@@ -4,7 +4,7 @@ Handles business logic for skill translation and career matching.
 """
 from typing import List, Dict
 
-from src.core.models import AthleteProfile, Job
+from src.core.models import AthleteProfile, Job, Employer
 from src.core.data import (
     SKILL_DB,
     UNIVERSAL_SKILLS,
@@ -14,7 +14,8 @@ from src.core.data import (
     BASE_JOBS,
     GRIT_JOBS,
     TEAMWORK_JOBS,
-    HIGH_SCORE_THRESHOLD
+    HIGH_SCORE_THRESHOLD,
+    SAMPLE_EMPLOYERS
 )
 
 
@@ -77,3 +78,23 @@ def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
         job_titles.extend(TEAMWORK_JOBS)
 
     return [Job(title=title) for title in job_titles]
+
+
+def match_employers(profile: AthleteProfile) -> List[Employer]:
+    """
+    Finds employers whose required skills match the athlete's translated skills.
+
+    Args:
+        profile: The athlete's profile (DTO).
+
+    Returns:
+        List of Employer DTOs where all required skills are present in the
+        athlete's skill set.
+    """
+    athlete_skills = translate_skills(profile)
+    skill_names = set(athlete_skills.keys())
+
+    return [
+        employer for employer in SAMPLE_EMPLOYERS
+        if set(employer.required_skills).issubset(skill_names)
+    ]

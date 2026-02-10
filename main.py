@@ -9,7 +9,7 @@ skills into corporate value.
 import argparse
 from typing import Dict, Callable
 from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers
+from src.core.services import translate_skills, match_careers, match_employers
 
 
 def handle_translate(args: argparse.Namespace) -> None:
@@ -32,6 +32,19 @@ def handle_match(args: argparse.Namespace) -> None:
     for job in matches:
         print(f"- {job.title}")
     print("\nStructure is gone. But your discipline remains.")
+
+
+def handle_employers(args: argparse.Namespace) -> None:
+    """Handles the 'employers' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    matches = match_employers(profile)
+    print(f"\n--- Employer Matches for {args.sport} {args.role} ---")
+    if not matches:
+        print("No direct matches found. Keep training.")
+    for employer in matches:
+        print(f"- {employer.name} ({employer.industry})")
+        print(f"  Required Skills: {', '.join(employer.required_skills)}")
+    print("\nNetwork is net worth.")
 
 
 def main() -> None:
@@ -77,11 +90,30 @@ def main() -> None:
         '--teamwork', type=int, default=9, help='Teamwork level (1-10)'
     )
 
+    # Command: employers
+    employers_parser = subparsers.add_parser(
+        'employers',
+        help='Find employers looking for your specific skills'
+    )
+    employers_parser.add_argument(
+        '--sport',
+        type=str,
+        required=True,
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    employers_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
+        'employers': handle_employers,
     }
 
     if args.command in command_handlers:

@@ -19,3 +19,8 @@
 -   **Status**: Completed.
 -   **Focus**: Domain Modeling.
 -   **Outcome**: Added `Employer` model in `src/core/models.py`, `SAMPLE_EMPLOYERS` in `src/core/data.py`, and verified with `tests/test_models.py`.
+
+## 2026-02-05 - Employer Matching
+-   **Status**: Completed.
+-   **Focus**: Implement employer matching logic.
+-   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
