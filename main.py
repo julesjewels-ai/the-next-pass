@@ -26,9 +26,16 @@ def handle_match(args: argparse.Namespace) -> None:
     """Handles the 'match' command."""
     print(
         f"\n--- Career Matches (Grit: {args.grit}, "
-        f"Teamwork: {args.teamwork}) ---"
+        f"Teamwork: {args.teamwork}, GPA: {args.gpa}) ---"
     )
-    matches = match_careers(args.grit, args.teamwork)
+    profile = AthleteProfile(
+        sport="Unknown",
+        role="Unknown",
+        grit=args.grit,
+        teamwork=args.teamwork,
+        gpa=args.gpa
+    )
+    matches = match_careers(profile)
     for job in matches:
         print(f"- {job.title}")
     print("\nStructure is gone. But your discipline remains.")
@@ -88,6 +95,9 @@ def main() -> None:
     )
     match_parser.add_argument(
         '--teamwork', type=int, default=9, help='Teamwork level (1-10)'
+    )
+    match_parser.add_argument(
+        '--gpa', type=float, default=3.0, help='GPA (0.0-4.0)'
     )
 
     # Command: employers

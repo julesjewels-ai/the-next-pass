@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-05 - Profile Enrichment and Refactoring
+-   **Status**: Completed.
+-   **Focus**: Domain Logic Unification.
+-   **Outcome**: Enriched `AthleteProfile` with grit, teamwork, and GPA. Refactored `match_careers` to accept profile object. Updated CLI to support GPA and profile-based matching. Verified with tests and type checking.
