@@ -10,10 +10,10 @@
     -   [x] Support more sports and roles.
     -   [x] Implement advanced mapping logic (e.g. multi-factor mapping).
 
-3.  **Employer Matching Enhancements**
+3.  **Employer Matching Enhancements (Completed)**
     -   [x] Add "Employer" entity.
     -   [x] Implement matching based on specific requirements.
 
 ## Current Gap Analysis
 -   **Type Safety**: Runtime validation enabled via Pydantic.
--   **Testing**: Coverage for new sports and roles added.
+-   **Testing**: Full coverage for `src/core` and `main.py`.
