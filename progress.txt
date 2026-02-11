@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-05 - Complete AthleteProfile Domain Model
+-   **Status**: Completed.
+-   **Focus**: Domain Model & Architecture Refactoring.
+-   **Outcome**: Enriched `AthleteProfile` with `grit`, `teamwork`, and `gpa` (with validation). Refactored `match_careers` to accept `AthleteProfile`. Updated CLI `match` command to include `sport` and `role`. Verified with tests and type checks (added `mypy.ini`).

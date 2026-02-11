@@ -58,23 +58,22 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     }
 
 
-def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
+def match_careers(profile: AthleteProfile) -> List[Job]:
     """
     Suggests careers based on soft-skill scoring.
 
     Args:
-        grit_score: Int 1-10
-        teamwork_score: Int 1-10
+        profile: The athlete's profile (DTO).
 
     Returns:
         List of Job DTOs.
     """
     job_titles = list(BASE_JOBS)
 
-    if grit_score > HIGH_SCORE_THRESHOLD:
+    if profile.grit > HIGH_SCORE_THRESHOLD:
         job_titles.extend(GRIT_JOBS)
 
-    if teamwork_score > HIGH_SCORE_THRESHOLD:
+    if profile.teamwork > HIGH_SCORE_THRESHOLD:
         job_titles.extend(TEAMWORK_JOBS)
 
     return [Job(title=title) for title in job_titles]

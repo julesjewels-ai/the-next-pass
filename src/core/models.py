@@ -9,6 +9,9 @@ class AthleteProfile(BaseModel):
     """Represents a student-athlete's basic background."""
     sport: str = Field(..., description="The sport played by the athlete")
     role: str = Field(..., description="The role or position within the team")
+    grit: int = Field(5, description="Grit level (1-10)", ge=1, le=10)
+    teamwork: int = Field(5, description="Teamwork level (1-10)", ge=1, le=10)
+    gpa: float = Field(3.0, description="Grade Point Average (0.0-4.0)", ge=0.0, le=4.0)
 
 
 class Skill(BaseModel):

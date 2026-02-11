@@ -3,7 +3,27 @@ Unit tests for domain models.
 """
 import pytest
 from pydantic import ValidationError
-from src.core.models import Employer
+from src.core.models import Employer, AthleteProfile
+
+
+def test_athlete_profile_defaults():
+    """Test that default values are set correctly."""
+    profile = AthleteProfile(sport="Soccer", role="Player")
+    assert profile.grit == 5
+    assert profile.teamwork == 5
+    assert profile.gpa == 3.0
+
+
+def test_athlete_profile_validation():
+    """Test that values outside range raise ValidationError."""
+    with pytest.raises(ValidationError):
+        AthleteProfile(sport="Soccer", role="Player", grit=11)
+
+    with pytest.raises(ValidationError):
+        AthleteProfile(sport="Soccer", role="Player", teamwork=0)
+
+    with pytest.raises(ValidationError):
+        AthleteProfile(sport="Soccer", role="Player", gpa=4.5)
 
 
 def test_employer_creation_valid():

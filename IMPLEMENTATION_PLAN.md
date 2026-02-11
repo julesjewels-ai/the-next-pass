@@ -14,6 +14,12 @@
     -   [x] Add "Employer" entity.
     -   [x] Implement matching based on specific requirements.
 
+4.  **Domain Model Completeness (Completed)**
+    -   [x] Enrich `AthleteProfile` with `grit`, `teamwork`, `gpa`.
+    -   [x] Refactor `match_careers` to accept `AthleteProfile`.
+    -   [x] Update CLI `match` command to use full profile.
+
 ## Current Gap Analysis
--   **Type Safety**: Runtime validation enabled via Pydantic.
+-   **Type Safety**: Runtime validation enabled via Pydantic. strict type checking enabled via `mypy.ini`.
 -   **Testing**: Coverage for new sports and roles added.
+-   **Architecture**: Service layer functions now operate on Domain Entities (DTOs) rather than primitives.

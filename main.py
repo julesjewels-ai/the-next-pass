@@ -28,7 +28,13 @@ def handle_match(args: argparse.Namespace) -> None:
         f"\n--- Career Matches (Grit: {args.grit}, "
         f"Teamwork: {args.teamwork}) ---"
     )
-    matches = match_careers(args.grit, args.teamwork)
+    profile = AthleteProfile(
+        sport=args.sport,
+        role=args.role,
+        grit=args.grit,
+        teamwork=args.teamwork
+    )
+    matches = match_careers(profile)
     for job in matches:
         print(f"- {job.title}")
     print("\nStructure is gone. But your discipline remains.")
@@ -82,6 +88,18 @@ def main() -> None:
     match_parser = subparsers.add_parser(
         'match',
         help='Find potential career matches based on athletic traits'
+    )
+    match_parser.add_argument(
+        '--sport',
+        type=str,
+        default='General Athlete',
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    match_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
     )
     match_parser.add_argument(
         '--grit', type=int, default=8, help='Grit level (1-10)'
