@@ -16,4 +16,4 @@
 
 ## Current Gap Analysis
 -   **Type Safety**: Runtime validation enabled via Pydantic.
--   **Testing**: Coverage for new sports and roles added.
+-   **Testing**: Full coverage for CLI entry point `main.py` and core services.

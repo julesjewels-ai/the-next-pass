@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-05 - Forensic Testing
+-   **Status**: Completed.
+-   **Focus**: Eliminate unknown unknowns in `main.py`.
+-   **Outcome**: Created `tests/test_main.py` achieving 100% coverage for the CLI entry point. Implemented rigorous type-safe tests using `pytest` and `pytest-mock`.
