@@ -3,7 +3,7 @@ Unit tests for domain models.
 """
 import pytest
 from pydantic import ValidationError
-from src.core.models import Employer
+from src.core.models import Employer, Job
 
 
 def test_employer_creation_valid():
@@ -36,3 +36,29 @@ def test_employer_creation_invalid_type():
             industry="Technology",
             required_skills="Not a list"  # Should be a list
         )
+
+
+def test_job_creation_defaults():
+    """Test creating a Job with only required fields (title)."""
+    job = Job(title="Software Engineer")
+    assert job.title == "Software Engineer"
+    assert job.employer == "General"
+    assert job.min_grit == 0
+    assert job.min_teamwork == 0
+    assert job.required_skills == []
+
+
+def test_job_creation_full():
+    """Test creating a Job with all fields."""
+    job = Job(
+        title="Product Manager",
+        employer="TechCorp",
+        min_grit=8,
+        min_teamwork=7,
+        required_skills=["Leadership", "Strategic Analysis"]
+    )
+    assert job.title == "Product Manager"
+    assert job.employer == "TechCorp"
+    assert job.min_grit == 8
+    assert job.min_teamwork == 7
+    assert job.required_skills == ["Leadership", "Strategic Analysis"]

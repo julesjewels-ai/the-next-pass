@@ -20,6 +20,10 @@ class Skill(BaseModel):
 class Job(BaseModel):
     """Represents a job opportunity."""
     title: str = Field(..., description="The job title")
+    employer: str = Field("General", description="The hiring company")
+    min_grit: int = Field(0, description="Minimum grit score required")
+    min_teamwork: int = Field(0, description="Minimum teamwork score required")
+    required_skills: List[str] = Field(default_factory=list, description="Skills required for the job")
 
 
 class Employer(BaseModel):

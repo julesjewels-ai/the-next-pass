@@ -10,10 +10,15 @@
     -   [x] Support more sports and roles.
     -   [x] Implement advanced mapping logic (e.g. multi-factor mapping).
 
-3.  **Employer Matching Enhancements**
+3.  **Employer Matching Enhancements (Completed)**
     -   [x] Add "Employer" entity.
     -   [x] Implement matching based on specific requirements.
 
+4.  **Intelligent Job Matching (Phase 2)**
+    -   [ ] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
+    -   [ ] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
+    -   [ ] **CLI Integration**: Expose `opportunities` command.
+
 ## Current Gap Analysis
--   **Type Safety**: Runtime validation enabled via Pydantic.
--   **Testing**: Coverage for new sports and roles added.
+-   **Data Richness**: `Job` entities are currently just strings wrapped in a class. They lack depth for intelligent matching.
+-   **Matching Logic**: Skills and Traits (Grit/Teamwork) are currently siloed in separate matching functions.
