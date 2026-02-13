@@ -58,12 +58,20 @@ def test_career_matching_high_grit():
     titles = [job.title for job in jobs]
     assert "Operations Manager (High Intensity)" in titles
 
+    # Verify industry mapping
+    ops_job = next(job for job in jobs if job.title == "Operations Manager (High Intensity)")
+    assert ops_job.industry == "Operations"
+
 
 def test_career_matching_high_teamwork():
     """Test that high teamwork scores return success roles."""
     jobs = match_careers(grit_score=5, teamwork_score=9)
     titles = [job.title for job in jobs]
     assert "Customer Success Manager" in titles
+
+    # Verify industry mapping
+    csm_job = next(job for job in jobs if job.title == "Customer Success Manager")
+    assert csm_job.industry == "Client Services"
 
 
 def test_skill_translation_composite_football_captain():

@@ -11,10 +11,7 @@ from src.core.data import (
     ROLE_SKILL_MAPPINGS,
     SPORT_SKILL_MAPPINGS,
     COMPOSITE_SKILL_MAPPINGS,
-    BASE_JOBS,
-    GRIT_JOBS,
-    TEAMWORK_JOBS,
-    HIGH_SCORE_THRESHOLD,
+    JOBS_DB,
     SAMPLE_EMPLOYERS
 )
 
@@ -69,15 +66,10 @@ def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
     Returns:
         List of Job DTOs.
     """
-    job_titles = list(BASE_JOBS)
-
-    if grit_score > HIGH_SCORE_THRESHOLD:
-        job_titles.extend(GRIT_JOBS)
-
-    if teamwork_score > HIGH_SCORE_THRESHOLD:
-        job_titles.extend(TEAMWORK_JOBS)
-
-    return [Job(title=title) for title in job_titles]
+    return [
+        job for job in JOBS_DB
+        if job.min_grit <= grit_score and job.min_teamwork <= teamwork_score
+    ]
 
 
 def match_employers(profile: AthleteProfile) -> List[Employer]:

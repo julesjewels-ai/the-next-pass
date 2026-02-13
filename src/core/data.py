@@ -2,7 +2,7 @@
 Data layer for The 98% Platform.
 Stores static mappings and database constants.
 """
-from src.core.models import Employer
+from src.core.models import Employer, Job
 
 # Domain Constants
 SKILL_LEADERSHIP = "Leadership"
@@ -75,11 +75,56 @@ COMPOSITE_SKILL_MAPPINGS = {
     (KEY_FOOTBALL, KEY_CAPTAIN): (SKILL_OPERATIONAL_COMMAND, KEY_FOOTBALL_CAPTAIN),
 }
 
-BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
-GRIT_JOBS = ["Operations Manager (High Intensity)", "Logistics Specialist"]
-TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
-
-HIGH_SCORE_THRESHOLD = 8
+JOBS_DB = [
+    Job(
+        title="Sales Development Representative",
+        industry="Sales",
+        min_grit=0,
+        min_teamwork=0,
+        required_skills=[SKILL_RESILIENCE],
+        description="Entry-level sales role requiring resilience and persistence."
+    ),
+    Job(
+        title="Project Coordinator",
+        industry="Operations",
+        min_grit=0,
+        min_teamwork=0,
+        required_skills=[SKILL_TIME_MANAGEMENT, SKILL_TEAM_COLLABORATION],
+        description="Support role for project management teams."
+    ),
+    Job(
+        title="Operations Manager (High Intensity)",
+        industry="Operations",
+        min_grit=9,
+        min_teamwork=0,
+        required_skills=[SKILL_OPERATIONAL_COMMAND, SKILL_STRATEGIC_EXECUTION],
+        description="High-stakes operations role requiring grit and execution."
+    ),
+    Job(
+        title="Logistics Specialist",
+        industry="Supply Chain",
+        min_grit=9,
+        min_teamwork=0,
+        required_skills=[SKILL_RESILIENCE, SKILL_TIME_MANAGEMENT],
+        description="Complex logistics coordination role."
+    ),
+    Job(
+        title="Customer Success Manager",
+        industry="Client Services",
+        min_grit=0,
+        min_teamwork=9,
+        required_skills=[SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP],
+        description="Client-facing role requiring strong interpersonal skills."
+    ),
+    Job(
+        title="Human Resources Specialist",
+        industry="HR",
+        min_grit=0,
+        min_teamwork=9,
+        required_skills=[SKILL_TEAM_COLLABORATION],
+        description="People operations role focusing on team culture."
+    ),
+]
 
 SAMPLE_EMPLOYERS = [
     Employer(
