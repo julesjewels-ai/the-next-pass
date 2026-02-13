@@ -15,3 +15,7 @@ env/
 # Testing
 .pytest_cache/
 .coverage
+
+# Media
+*.mp4
+output_story.mp4
