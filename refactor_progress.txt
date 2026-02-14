@@ -1,0 +1,2 @@
+# Refactor Progress Log
+# Format: filepath function_name
