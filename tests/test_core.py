@@ -73,3 +73,15 @@ def test_skill_translation_composite_football_captain():
 
     assert "Operational Command" in result
     assert "large-scale team maneuvers" in result["Operational Command"]
+
+def test_career_matching_returns_rich_data():
+    """Test that matched careers contain enhanced metadata like employer."""
+    jobs = match_careers(grit_score=9, teamwork_score=5)
+
+    # Check for Operations Manager which we know requires high grit
+    ops_job = next((job for job in jobs if "Operations Manager" in job.title), None)
+
+    assert ops_job is not None
+    assert ops_job.employer == "LogisticsInc"
+    assert ops_job.min_grit == 9
+    assert "Strategic Execution" in ops_job.required_skills
