@@ -73,3 +73,22 @@ def test_skill_translation_composite_football_captain():
 
     assert "Operational Command" in result
     assert "large-scale team maneuvers" in result["Operational Command"]
+
+
+def test_career_matching_mixed_criteria():
+    """Test that high scores in both traits return all relevant roles."""
+    jobs = match_careers(grit_score=9, teamwork_score=9)
+    titles = [job.title for job in jobs]
+    assert "Operations Manager (High Intensity)" in titles
+    assert "Customer Success Manager" in titles
+    # General jobs should also be present
+    assert "Sales Development Representative" in titles
+
+
+def test_career_matching_general_only():
+    """Test that low scores return only general roles."""
+    jobs = match_careers(grit_score=5, teamwork_score=5)
+    titles = [job.title for job in jobs]
+    assert "Sales Development Representative" in titles
+    assert "Operations Manager (High Intensity)" not in titles
+    assert "Customer Success Manager" not in titles

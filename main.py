@@ -30,7 +30,7 @@ def handle_match(args: argparse.Namespace) -> None:
     )
     matches = match_careers(args.grit, args.teamwork)
     for job in matches:
-        print(f"- {job.title}")
+        print(f"- {job.title} ({job.employer})")
     print("\nStructure is gone. But your discipline remains.")
 
 

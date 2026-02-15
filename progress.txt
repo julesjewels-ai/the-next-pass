@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-05 - Enhance Job Model & Data
+-   **Status**: Completed.
+-   **Focus**: Add metadata to Job entity and refactor matching logic.
+-   **Outcome**: Replaced string-based job lists with `JOBS_DB` containing rich `Job` objects in `src/core/data.py`. Refactored `match_careers` in `src/core/services.py` to filter this DB. Updated `main.py` to display employer info. Verified with tests.
