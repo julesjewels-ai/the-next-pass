@@ -2,7 +2,7 @@
 Data layer for The 98% Platform.
 Stores static mappings and database constants.
 """
-from src.core.models import Employer
+from src.core.models import Employer, Job
 
 # Domain Constants
 SKILL_LEADERSHIP = "Leadership"
@@ -96,5 +96,50 @@ SAMPLE_EMPLOYERS = [
         name="ConsultingGroup",
         industry="Consulting",
         required_skills=[SKILL_STRATEGIC_EXECUTION, SKILL_TEAM_COLLABORATION]
+    )
+]
+
+JOBS_DB = [
+    Job(
+        title="Sales Development Representative",
+        employer="TechCorp",
+        min_grit=6,
+        min_teamwork=5,
+        required_skills=[SKILL_RESILIENCE, SKILL_TIME_MANAGEMENT]
+    ),
+    Job(
+        title="Project Coordinator",
+        employer="ConsultingGroup",
+        min_grit=4,
+        min_teamwork=7,
+        required_skills=[SKILL_TIME_MANAGEMENT, SKILL_TEAM_COLLABORATION]
+    ),
+    Job(
+        title="Operations Manager (High Intensity)",
+        employer="LogisticsInc",
+        min_grit=9,
+        min_teamwork=6,
+        required_skills=[SKILL_OPERATIONAL_COMMAND, SKILL_RESILIENCE]
+    ),
+    Job(
+        title="Logistics Specialist",
+        employer="LogisticsInc",
+        min_grit=8,
+        min_teamwork=5,
+        required_skills=[SKILL_RESILIENCE, SKILL_TIME_MANAGEMENT]
+    ),
+    Job(
+        title="Customer Success Manager",
+        employer="TechCorp",
+        min_grit=6,
+        min_teamwork=9,
+        required_skills=[SKILL_TEAM_COLLABORATION, SKILL_STRATEGIC_ANALYSIS]
+    ),
+    Job(
+        title="Human Resources Specialist",
+        employer="ConsultingGroup",
+        min_grit=4,
+        min_teamwork=8,
+        required_skills=[SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP]
     )
 ]

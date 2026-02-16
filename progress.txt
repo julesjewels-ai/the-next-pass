@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-05 - Enhance Job Model (Phase 2)
+-   **Status**: Completed.
+-   **Focus**: Populate `JOBS_DB` with rich metadata.
+-   **Outcome**: Created `JOBS_DB` in `src/core/data.py` containing `Job` objects with title, employer, grit/teamwork thresholds, and required skills. Verified with `tests/test_data.py`.
