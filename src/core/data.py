@@ -2,7 +2,7 @@
 Data layer for The 98% Platform.
 Stores static mappings and database constants.
 """
-from src.core.models import Employer
+from src.core.models import Employer, Job
 
 # Domain Constants
 SKILL_LEADERSHIP = "Leadership"
@@ -75,10 +75,6 @@ COMPOSITE_SKILL_MAPPINGS = {
     (KEY_FOOTBALL, KEY_CAPTAIN): (SKILL_OPERATIONAL_COMMAND, KEY_FOOTBALL_CAPTAIN),
 }
 
-BASE_JOBS = ["Sales Development Representative", "Project Coordinator"]
-GRIT_JOBS = ["Operations Manager (High Intensity)", "Logistics Specialist"]
-TEAMWORK_JOBS = ["Customer Success Manager", "Human Resources Specialist"]
-
 HIGH_SCORE_THRESHOLD = 8
 
 SAMPLE_EMPLOYERS = [
@@ -96,5 +92,42 @@ SAMPLE_EMPLOYERS = [
         name="ConsultingGroup",
         industry="Consulting",
         required_skills=[SKILL_STRATEGIC_EXECUTION, SKILL_TEAM_COLLABORATION]
+    )
+]
+
+JOBS_DB = [
+    Job(
+        title="Sales Development Representative",
+        employer="TechCorp",
+        required_skills=[SKILL_STRATEGIC_ANALYSIS]
+    ),
+    Job(
+        title="Project Coordinator",
+        employer="ConsultingGroup",
+        required_skills=[SKILL_TEAM_COLLABORATION]
+    ),
+    Job(
+        title="Operations Manager (High Intensity)",
+        min_grit=HIGH_SCORE_THRESHOLD + 1,
+        employer="LogisticsInc",
+        required_skills=[SKILL_OPERATIONAL_COMMAND, SKILL_RESILIENCE]
+    ),
+    Job(
+        title="Logistics Specialist",
+        min_grit=HIGH_SCORE_THRESHOLD + 1,
+        employer="LogisticsInc",
+        required_skills=[SKILL_RESILIENCE]
+    ),
+    Job(
+        title="Customer Success Manager",
+        min_teamwork=HIGH_SCORE_THRESHOLD + 1,
+        employer="TechCorp",
+        required_skills=[SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP]
+    ),
+    Job(
+        title="Human Resources Specialist",
+        min_teamwork=HIGH_SCORE_THRESHOLD + 1,
+        employer="ConsultingGroup",
+        required_skills=[SKILL_TEAM_COLLABORATION]
     )
 ]
