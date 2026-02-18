@@ -90,3 +90,24 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
         employer for employer in SAMPLE_EMPLOYERS
         if set(employer.required_skills).issubset(skill_names)
     ]
+
+
+def match_opportunities(profile: AthleteProfile) -> List[Job]:
+    """
+    Finds job opportunities matching both skills and traits.
+
+    Args:
+        profile: The athlete's profile (DTO).
+
+    Returns:
+        List of Job DTOs where traits and skills are aligned.
+    """
+    athlete_skills = translate_skills(profile)
+    skill_names = set(athlete_skills.keys())
+
+    return [
+        job for job in JOBS_DB
+        if profile.grit >= job.min_grit
+        and profile.teamwork >= job.min_teamwork
+        and set(job.required_skills).issubset(skill_names)
+    ]
