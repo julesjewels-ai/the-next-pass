@@ -8,13 +8,15 @@ from unittest.mock import Mock
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
-from src.core.models import Employer, AthleteProfile
-from main import handle_employers
+from src.core.models import Employer, AthleteProfile, Job
+from main import handle_employers, handle_opportunities
+
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
     """Mock the match_employers service."""
     return mocker.patch("main.match_employers")
+
 
 @pytest.mark.parametrize("mock_return_value, expected_substrings", [
     (
@@ -58,3 +60,52 @@ def test_handle_employers(
     assert isinstance(call_arg, AthleteProfile)
     assert call_arg.sport == "Football"
     assert call_arg.role == "Captain"
+
+
+@pytest.fixture
+def mock_match_opportunities(mocker: MockerFixture) -> Mock:
+    """Mock the match_opportunities service."""
+    return mocker.patch("main.match_opportunities")
+
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        [Job(title="Software Engineer", employer="TechCorp", min_grit=5, min_teamwork=5, required_skills=["Coding"])],
+        ["Software Engineer", "(TechCorp)"]
+    ),
+    (
+        [],
+        ["Network is net worth", "No direct matches found"]
+    )
+])
+def test_handle_opportunities(
+    mock_match_opportunities: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: List[Job],
+    expected_substrings: List[str]
+) -> None:
+    """Test handle_opportunities with various match scenarios."""
+    # Arrange
+    args = argparse.Namespace(sport="Football", role="Captain", grit=8, teamwork=9)
+    mock_match_opportunities.return_value = mock_return_value
+
+    # Act
+    handle_opportunities(args)
+
+    # Assert
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out
+
+    # Verify the service was called with correct profile and scores
+    mock_match_opportunities.assert_called_once()
+    call_args = mock_match_opportunities.call_args[0]
+    profile_arg = call_args[0]
+    grit_arg = call_args[1]
+    teamwork_arg = call_args[2]
+
+    assert isinstance(profile_arg, AthleteProfile)
+    assert profile_arg.sport == "Football"
+    assert profile_arg.role == "Captain"
+    assert grit_arg == 8
+    assert teamwork_arg == 9
