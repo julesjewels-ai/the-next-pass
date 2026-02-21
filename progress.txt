@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-18 - Forensic Test Architecture
+-   **Status**: Completed.
+-   **Focus**: Eliminate "unknown unknowns" in `match_careers`.
+-   **Outcome**: Created `tests/test_match_careers.py` with parametrized tests covering boundary conditions and edge cases for career matching logic.
