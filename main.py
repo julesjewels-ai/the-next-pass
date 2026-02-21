@@ -9,7 +9,12 @@ skills into corporate value.
 import argparse
 from typing import Dict, Callable
 from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers, match_employers
+from src.core.services import (
+    translate_skills,
+    match_careers,
+    match_employers,
+    match_opportunities
+)
 
 
 def handle_translate(args: argparse.Namespace) -> None:
@@ -45,6 +50,21 @@ def handle_employers(args: argparse.Namespace) -> None:
         print(f"- {employer.name} ({employer.industry})")
         print(f"  Required Skills: {', '.join(employer.required_skills)}")
     print("\nNetwork is net worth.")
+
+
+def handle_opportunities(args: argparse.Namespace) -> None:
+    """Handles the 'opportunities' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    print(
+        f"\n--- Career Opportunities for {args.sport} {args.role} "
+        f"(Grit: {args.grit}, Teamwork: {args.teamwork}) ---"
+    )
+    matches = match_opportunities(profile, args.grit, args.teamwork)
+    if not matches:
+        print("Network is net worth.")
+    for job in matches:
+        print(f"- {job.title} ({job.employer})")
+    print("")
 
 
 def main() -> None:
@@ -108,12 +128,37 @@ def main() -> None:
         help='Role within the team (e.g., Captain, Starter)'
     )
 
+    # Command: opportunities
+    opportunities_parser = subparsers.add_parser(
+        'opportunities',
+        help='Find specific job opportunities based on skills and traits'
+    )
+    opportunities_parser.add_argument(
+        '--sport',
+        type=str,
+        required=True,
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    opportunities_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
+    )
+    opportunities_parser.add_argument(
+        '--grit', type=int, default=5, help='Grit level (1-10)'
+    )
+    opportunities_parser.add_argument(
+        '--teamwork', type=int, default=5, help='Teamwork level (1-10)'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
         'employers': handle_employers,
+        'opportunities': handle_opportunities,
     }
 
     if args.command in command_handlers:

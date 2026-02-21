@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-05 - Intelligent Job Matching
+-   **Status**: Completed.
+-   **Focus**: Implement unified job matching logic.
+-   **Outcome**: Added `match_opportunities` in `src/core/services.py` to filter jobs by both scores and skills. Exposed `opportunities` command in `main.py`. Verified with `tests/test_opportunities.py`.
