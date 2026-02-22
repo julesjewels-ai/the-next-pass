@@ -15,7 +15,7 @@
     -   [x] Implement matching based on specific requirements.
 
 4.  **Intelligent Job Matching (Phase 2)**
-    -   [ ] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
+    -   [x] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
     -   [ ] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
     -   [ ] **CLI Integration**: Expose `opportunities` command.
 

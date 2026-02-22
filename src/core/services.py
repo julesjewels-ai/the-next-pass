@@ -90,3 +90,39 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
         employer for employer in SAMPLE_EMPLOYERS
         if set(employer.required_skills).issubset(skill_names)
     ]
+
+
+def match_opportunities(
+    profile: AthleteProfile,
+    grit_score: int,
+    teamwork_score: int
+) -> List[Job]:
+    """
+    Finds job opportunities matching both soft skills (grit/teamwork)
+    and hard skills (translated from profile).
+
+    Args:
+        profile: The athlete's profile (DTO).
+        grit_score: Int 1-10
+        teamwork_score: Int 1-10
+
+    Returns:
+        List of Job DTOs where:
+        1. Job requirements (grit/teamwork) are met.
+        2. All required skills for the job are present in the
+           athlete's translated skills.
+    """
+    # 1. Get potential jobs based on soft skills
+    candidates = match_careers(grit_score, teamwork_score)
+
+    # 2. Translate profile to skills
+    athlete_skills = translate_skills(profile)
+    athlete_skill_names = set(athlete_skills.keys())
+
+    # 3. Filter by required skills
+    matches = []
+    for job in candidates:
+        if set(job.required_skills).issubset(athlete_skill_names):
+            matches.append(job)
+
+    return matches
