@@ -110,13 +110,13 @@ JOBS_DB = [
         title="Operations Manager (High Intensity)",
         min_grit=HIGH_SCORE_THRESHOLD + 1,
         employer="LogisticsInc",
-        required_skills=[SKILL_OPERATIONAL_COMMAND, SKILL_RESILIENCE]
+        required_skills=[SKILL_OPERATIONAL_COMMAND]
     ),
     Job(
         title="Logistics Specialist",
         min_grit=HIGH_SCORE_THRESHOLD + 1,
         employer="LogisticsInc",
-        required_skills=[SKILL_RESILIENCE]
+        required_skills=[SKILL_STRATEGIC_EXECUTION]
     ),
     Job(
         title="Customer Success Manager",

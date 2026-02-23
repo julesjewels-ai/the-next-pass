@@ -90,3 +90,33 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
         employer for employer in SAMPLE_EMPLOYERS
         if set(employer.required_skills).issubset(skill_names)
     ]
+
+
+def match_opportunities(
+    profile: AthleteProfile,
+    grit_score: int,
+    teamwork_score: int
+) -> List[Job]:
+    """
+    Finds jobs that match both hard skills (resume bullets) and soft skills (grit/teamwork).
+
+    Args:
+        profile: The athlete's profile (DTO).
+        grit_score: Int 1-10.
+        teamwork_score: Int 1-10.
+
+    Returns:
+        List of Job DTOs where:
+        1. job.min_grit <= grit_score
+        2. job.min_teamwork <= teamwork_score
+        3. job.required_skills is a subset of the athlete's translated skills
+    """
+    athlete_skills = translate_skills(profile)
+    skill_names = set(athlete_skills.keys())
+
+    return [
+        job for job in JOBS_DB
+        if grit_score >= job.min_grit
+        and teamwork_score >= job.min_teamwork
+        and set(job.required_skills).issubset(skill_names)
+    ]
