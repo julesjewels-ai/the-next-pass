@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-24 - Main CLI Tests
+-   **Status**: Completed.
+-   **Focus**: Increase test coverage for `main.py`.
+-   **Outcome**: Implemented comprehensive tests for `main.py` handlers and dispatch logic, achieving 100% coverage.
