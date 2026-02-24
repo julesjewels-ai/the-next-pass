@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-18 - Intelligent Job Matching (Phase 2)
+-   **Status**: Completed.
+-   **Focus**: Implement unified matching service and CLI.
+-   **Outcome**: Added `match_opportunities` in `src/core/services.py`, `opportunities` command in `main.py`. Verified with `tests/test_opportunities.py` and `tests/test_main.py`. Highest complexity is 5 (A).
