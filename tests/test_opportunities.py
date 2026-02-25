@@ -102,3 +102,38 @@ def test_match_opportunities_missing_skill(high_scores):
     titles = [job.title for job in matches]
 
     assert "Project Coordinator" not in titles
+
+def test_match_opportunities_walkon_analyst(high_scores):
+    """
+    Test that a Walk-on matches 'Supply Chain Analyst'.
+    Requires Resilience (Walk-on) and Strategic Analysis (Universal).
+    """
+    profile = AthleteProfile(sport="Swimming", role="Walk-on")
+    matches = match_opportunities(profile, grit_score=high_scores, teamwork_score=high_scores)
+    titles = [job.title for job in matches]
+
+    assert "Supply Chain Analyst" in titles
+
+def test_match_opportunities_leadership_program(high_scores):
+    """
+    Test that a Captain matches 'Leadership Development Program'.
+    Requires Leadership (Captain) and Time Management (Universal).
+    """
+    profile = AthleteProfile(sport="Tennis", role="Captain")
+    matches = match_opportunities(profile, grit_score=high_scores, teamwork_score=high_scores)
+    titles = [job.title for job in matches]
+
+    assert "Leadership Development Program" in titles
+
+def test_match_opportunities_field_operations(high_scores):
+    """
+    Test that a Football Walk-on Captain matches 'Field Operations Supervisor'.
+    Requires Operational Command (Football Captain) and Resilience (Walk-on).
+    This demonstrates handling multiple roles/keywords in the profile.
+    """
+    # Assuming role can be "Walk-on Captain" or similar
+    profile = AthleteProfile(sport="Football", role="Walk-on Captain")
+    matches = match_opportunities(profile, grit_score=high_scores, teamwork_score=high_scores)
+    titles = [job.title for job in matches]
+
+    assert "Field Operations Supervisor" in titles

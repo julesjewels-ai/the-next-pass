@@ -129,5 +129,21 @@ JOBS_DB = [
         min_teamwork=HIGH_SCORE_THRESHOLD + 1,
         employer="ConsultingGroup",
         required_skills=[SKILL_TEAM_COLLABORATION]
+    ),
+    Job(
+        title="Supply Chain Analyst",
+        employer="LogisticsInc",
+        required_skills=[SKILL_RESILIENCE, SKILL_STRATEGIC_ANALYSIS]
+    ),
+    Job(
+        title="Leadership Development Program",
+        employer="TechCorp",
+        required_skills=[SKILL_LEADERSHIP, SKILL_TIME_MANAGEMENT]
+    ),
+    Job(
+        title="Field Operations Supervisor",
+        employer="LogisticsInc",
+        min_grit=HIGH_SCORE_THRESHOLD + 1,
+        required_skills=[SKILL_OPERATIONAL_COMMAND, SKILL_RESILIENCE]
     )
 ]
