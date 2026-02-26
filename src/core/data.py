@@ -92,8 +92,15 @@ SAMPLE_EMPLOYERS = [
         name="ConsultingGroup",
         industry="Consulting",
         required_skills=[SKILL_STRATEGIC_EXECUTION, SKILL_TEAM_COLLABORATION]
+    ),
+    Employer(
+        name="StartUp",
+        industry="Technology",
+        required_skills=[SKILL_TIME_MANAGEMENT]
     )
 ]
+
+EMPLOYERS_INDEX = {e.name: e for e in SAMPLE_EMPLOYERS}
 
 JOBS_DB = [
     Job(
@@ -129,5 +136,10 @@ JOBS_DB = [
         min_teamwork=HIGH_SCORE_THRESHOLD + 1,
         employer="ConsultingGroup",
         required_skills=[SKILL_TEAM_COLLABORATION]
+    ),
+    Job(
+        title="Junior Associate",
+        employer="StartUp",
+        required_skills=[]
     )
 ]

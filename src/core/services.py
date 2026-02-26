@@ -12,7 +12,8 @@ from src.core.data import (
     SPORT_SKILL_MAPPINGS,
     COMPOSITE_SKILL_MAPPINGS,
     JOBS_DB,
-    SAMPLE_EMPLOYERS
+    SAMPLE_EMPLOYERS,
+    EMPLOYERS_INDEX
 )
 
 
@@ -99,6 +100,7 @@ def match_opportunities(
 ) -> List[Job]:
     """
     Finds jobs that match both hard skills (resume bullets) and soft skills (grit/teamwork).
+    Also validates that the athlete meets the baseline skill requirements of the employer.
 
     Args:
         profile: The athlete's profile (DTO).
@@ -110,13 +112,26 @@ def match_opportunities(
         1. job.min_grit <= grit_score
         2. job.min_teamwork <= teamwork_score
         3. job.required_skills is a subset of the athlete's translated skills
+        4. job.employer.required_skills is a subset of the athlete's translated skills
     """
     athlete_skills = translate_skills(profile)
     skill_names = set(athlete_skills.keys())
 
-    return [
-        job for job in JOBS_DB
-        if grit_score >= job.min_grit
-        and teamwork_score >= job.min_teamwork
-        and set(job.required_skills).issubset(skill_names)
-    ]
+    matched_jobs = []
+    for job in JOBS_DB:
+        # 1. Soft Skills Check
+        if grit_score < job.min_grit or teamwork_score < job.min_teamwork:
+            continue
+
+        # 2. Job-Specific Skills Check
+        if not set(job.required_skills).issubset(skill_names):
+            continue
+
+        # 3. Employer Baseline Skills Check
+        employer = EMPLOYERS_INDEX.get(job.employer)
+        if employer and not set(employer.required_skills).issubset(skill_names):
+            continue
+
+        matched_jobs.append(job)
+
+    return matched_jobs

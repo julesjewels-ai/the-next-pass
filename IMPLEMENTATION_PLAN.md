@@ -14,11 +14,13 @@
     -   [x] Add "Employer" entity.
     -   [x] Implement matching based on specific requirements.
 
-4.  **Intelligent Job Matching (Phase 2)**
-    -   [ ] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
-    -   [ ] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
-    -   [ ] **CLI Integration**: Expose `opportunities` command.
+4.  **Intelligent Job Matching (Completed)**
+    -   [x] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
+    -   [x] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
+    -   [x] **CLI Integration**: Expose `opportunities` command.
+
+5.  **Deep Integration (Phase 3)**
+    -   [ ] **Enforce Employer Baseline Requirements**: Ensure job matches also satisfy the parent employer's baseline skill requirements.
 
 ## Current Gap Analysis
--   **Data Richness**: `Job` entities are currently just strings wrapped in a class. They lack depth for intelligent matching.
--   **Matching Logic**: Skills and Traits (Grit/Teamwork) are currently siloed in separate matching functions.
+-   **Employer Constraints**: Currently, `match_opportunities` checks job-specific skills but ignores the employer's baseline requirements. For example, TechCorp requires "Leadership" for *all* roles, but a "Sales Development Representative" job there only lists "Strategic Analysis". A candidate with "Strategic Analysis" but no "Leadership" is currently matched, which is incorrect.
