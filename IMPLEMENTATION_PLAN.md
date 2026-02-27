@@ -15,10 +15,10 @@
     -   [x] Implement matching based on specific requirements.
 
 4.  **Intelligent Job Matching (Phase 2)**
-    -   [ ] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
-    -   [ ] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
-    -   [ ] **CLI Integration**: Expose `opportunities` command.
+    -   [x] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
+    -   [ ] **Unified Matching Service**: Enhance `match_opportunities` to filter jobs by both job-specific skills and the employer's required skills.
+    -   [x] **CLI Integration**: Expose `opportunities` command.
 
 ## Current Gap Analysis
--   **Data Richness**: `Job` entities are currently just strings wrapped in a class. They lack depth for intelligent matching.
--   **Matching Logic**: Skills and Traits (Grit/Teamwork) are currently siloed in separate matching functions.
+-   **Matching Logic**: `match_opportunities` currently only checks for the skills explicitly listed on the `Job` object. It needs to also enforce that the candidate possesses all the `required_skills` of the `Employer` associated with the job.
+-   **Data Access**: We need an `EMPLOYERS_INDEX` in the data layer to quickly look up `Employer` objects by name during the matching process.

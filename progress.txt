@@ -24,3 +24,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement employer matching logic.
 -   **Outcome**: Added `match_employers` in `src/core/services.py`, `employers` command in `main.py`, and verification tests.
+
+## 2026-02-27 - Phase 2 Intelligent Matching Setup
+-   **Status**: In Progress.
+-   **Focus**: Ensure `match_opportunities` enforces Employer required skills.
+-   **Outcome**: Updating implementation plan and gap analysis.

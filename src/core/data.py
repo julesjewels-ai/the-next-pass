@@ -72,7 +72,9 @@ ROLE_SKILL_MAPPINGS = {
 
 # Mapping: (Sport Keyword, Role Keyword) -> (Output Skill Name, Database Key)
 COMPOSITE_SKILL_MAPPINGS = {
-    (KEY_FOOTBALL, KEY_CAPTAIN): (SKILL_OPERATIONAL_COMMAND, KEY_FOOTBALL_CAPTAIN),
+    (KEY_FOOTBALL, KEY_CAPTAIN): (
+        SKILL_OPERATIONAL_COMMAND, KEY_FOOTBALL_CAPTAIN
+    ),
 }
 
 HIGH_SCORE_THRESHOLD = 8
@@ -94,6 +96,8 @@ SAMPLE_EMPLOYERS = [
         required_skills=[SKILL_STRATEGIC_EXECUTION, SKILL_TEAM_COLLABORATION]
     )
 ]
+
+EMPLOYERS_INDEX = {employer.name: employer for employer in SAMPLE_EMPLOYERS}
 
 JOBS_DB = [
     Job(
