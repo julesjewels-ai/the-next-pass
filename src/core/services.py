@@ -12,7 +12,8 @@ from src.core.data import (
     SPORT_SKILL_MAPPINGS,
     COMPOSITE_SKILL_MAPPINGS,
     JOBS_DB,
-    SAMPLE_EMPLOYERS
+    SAMPLE_EMPLOYERS,
+    EMPLOYERS_INDEX
 )
 
 
@@ -114,9 +115,15 @@ def match_opportunities(
     athlete_skills = translate_skills(profile)
     skill_names = set(athlete_skills.keys())
 
-    return [
-        job for job in JOBS_DB
-        if grit_score >= job.min_grit
-        and teamwork_score >= job.min_teamwork
-        and set(job.required_skills).issubset(skill_names)
-    ]
+    matches = []
+    for job in JOBS_DB:
+        if grit_score >= job.min_grit and teamwork_score >= job.min_teamwork:
+            job_skills = set(job.required_skills)
+            employer = EMPLOYERS_INDEX.get(job.employer)
+            employer_skills = set(employer.required_skills) if employer else set()
+            required = job_skills.union(employer_skills)
+
+            if required.issubset(skill_names):
+                matches.append(job)
+
+    return matches
