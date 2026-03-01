@@ -95,6 +95,8 @@ SAMPLE_EMPLOYERS = [
     )
 ]
 
+EMPLOYERS_INDEX = {emp.name: emp for emp in SAMPLE_EMPLOYERS}
+
 JOBS_DB = [
     Job(
         title="Sales Development Representative",
