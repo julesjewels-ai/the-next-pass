@@ -1,0 +1,6 @@
+# Refactor Progress
+
+Scanned on 2026-03-02:
+- src/core/services.py
+- src/core/models.py
+- main.py
