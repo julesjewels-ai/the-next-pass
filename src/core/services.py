@@ -93,6 +93,29 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
     ]
 
 
+def get_skill_demand_report() -> Dict[str, int]:
+    """
+    Aggregates the frequency of required skills across all jobs and employers
+    to help athletes understand market demand.
+
+    Returns:
+        Dictionary mapping the corporate skill name to the number of
+        jobs/employers that require it, sorted by demand (descending).
+    """
+    demand: Dict[str, int] = {}
+    for job in JOBS_DB:
+        job_skills = set(job.required_skills)
+        employer = EMPLOYERS_INDEX.get(job.employer)
+        employer_skills = set(employer.required_skills) if employer else set()
+        required = job_skills.union(employer_skills)
+
+        for skill in required:
+            demand[skill] = demand.get(skill, 0) + 1
+
+    # Sort descending by demand
+    return dict(sorted(demand.items(), key=lambda item: item[1], reverse=True))
+
+
 def match_opportunities(
     profile: AthleteProfile,
     grit_score: int,

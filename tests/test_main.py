@@ -9,7 +9,7 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities
+from main import handle_employers, handle_opportunities, handle_demand
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -107,3 +107,33 @@ def test_handle_opportunities(
     assert profile_arg.role == "Captain"
     assert grit_arg == 8
     assert teamwork_arg == 9
+
+@pytest.fixture
+def mock_get_skill_demand_report(mocker: MockerFixture) -> Mock:
+    """Mock the get_skill_demand_report service."""
+    return mocker.patch("main.get_skill_demand_report")
+
+def test_handle_demand_with_data(mock_get_skill_demand_report: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_demand when report returns data."""
+    mock_get_skill_demand_report.return_value = {"Leadership": 5, "Teamwork": 3}
+    args = argparse.Namespace()
+
+    handle_demand(args)
+    captured = capsys.readouterr()
+
+    assert "--- Skill Demand Analytics ---" in captured.out
+    assert "- Leadership: Required by 5 role(s)" in captured.out
+    assert "- Teamwork: Required by 3 role(s)" in captured.out
+    assert "Train for what the market demands." in captured.out
+    mock_get_skill_demand_report.assert_called_once()
+
+def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_demand when report returns empty."""
+    mock_get_skill_demand_report.return_value = {}
+    args = argparse.Namespace()
+
+    handle_demand(args)
+    captured = capsys.readouterr()
+
+    assert "No job data available to calculate demand." in captured.out
+    mock_get_skill_demand_report.assert_called_once()

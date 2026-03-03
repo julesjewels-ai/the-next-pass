@@ -13,7 +13,8 @@ from src.core.services import (
     translate_skills,
     match_careers,
     match_employers,
-    match_opportunities
+    match_opportunities,
+    get_skill_demand_report
 )
 
 
@@ -68,6 +69,20 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         print(f"- {job.title} ({job.employer})")
 
     print("\nPreparation meets opportunity.")
+
+
+def handle_demand(args: argparse.Namespace) -> None:
+    """Handles the 'demand' command."""
+    print("\n--- Skill Demand Analytics ---")
+    demand = get_skill_demand_report()
+    if not demand:
+        print("No job data available to calculate demand.")
+        return
+
+    for skill, count in demand.items():
+        print(f"- {skill}: Required by {count} role(s)")
+
+    print("\nTrain for what the market demands.")
 
 
 def main() -> None:
@@ -155,6 +170,12 @@ def main() -> None:
         '--teamwork', type=int, default=9, help='Teamwork level (1-10)'
     )
 
+    # Command: demand
+    subparsers.add_parser(
+        'demand',
+        help='View market demand for specific skills'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
@@ -162,6 +183,7 @@ def main() -> None:
         'match': handle_match,
         'employers': handle_employers,
         'opportunities': handle_opportunities,
+        'demand': handle_demand,
     }
 
     if args.command in command_handlers:

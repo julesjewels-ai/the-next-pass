@@ -29,3 +29,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement unified job matching based on combined skills and traits.
 -   **Outcome**: Added `EMPLOYERS_INDEX` in data layer. Enforced logic constraint requiring both job and employer required skills in `match_opportunities`. Created `tests/test_opportunities_forensic.py` to isolate complex edge cases.
+
+## [Current Date] - Analytics and Reporting (Phase 3)
+-   **Status**: Completed.
+-   **Focus**: Implement Skill Demand Analytics.
+-   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
