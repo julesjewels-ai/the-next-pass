@@ -1,6 +1,8 @@
 """
 Tests for the main CLI application logic.
 """
+import sys
+from main import main as main_func
 import argparse
 from typing import List
 from unittest.mock import Mock
@@ -107,3 +109,69 @@ def test_handle_opportunities(
     assert profile_arg.role == "Captain"
     assert grit_arg == 8
     assert teamwork_arg == 9
+
+@pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    """Mock the translate_skills service."""
+    return mocker.patch("main.translate_skills")
+
+def test_handle_translate(mock_translate_skills: Mock, capsys: CaptureFixture) -> None:
+    args = argparse.Namespace(sport="Basketball", role="Point Guard")
+    mock_translate_skills.return_value = {"Led team": "Leadership"}
+
+    from main import handle_translate
+    handle_translate(args)
+
+    captured = capsys.readouterr()
+    assert "Basketball Point Guard" in captured.out
+    assert "Leadership" in captured.out
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    """Mock the match_careers service."""
+    return mocker.patch("main.match_careers")
+
+def test_handle_match(mock_match_careers: Mock, capsys: CaptureFixture) -> None:
+    args = argparse.Namespace(grit=5, teamwork=5)
+    mock_match_careers.return_value = [Job(title="Analyst", employer="Bank", required_skills=[])]
+
+    from main import handle_match
+    handle_match(args)
+
+    captured = capsys.readouterr()
+    assert "Analyst" in captured.out
+
+
+
+
+@pytest.mark.parametrize("args, handler_to_mock", [
+    (['main.py', 'translate', '--sport', 'Soccer'], 'main.handle_translate'),
+    (['main.py', 'match', '--grit', '5', '--teamwork', '5'], 'main.handle_match'),
+    (['main.py', 'employers', '--sport', 'Tennis'], 'main.handle_employers'),
+    (['main.py', 'opportunities', '--sport', 'Golf', '--grit', '5', '--teamwork', '5'], 'main.handle_opportunities'),
+])
+def test_main_dispatch_commands(
+    mocker: MockerFixture, args: List[str], handler_to_mock: str
+) -> None:
+    mocker.patch.object(sys, 'argv', args)
+    mock_handler = mocker.patch(handler_to_mock)
+    main_func()
+    assert mock_handler.call_count == 1, f"Expected {handler_to_mock} to be called exactly once for args {args}"
+
+
+@pytest.mark.parametrize("args, should_exit, expected_output", [
+    (['main.py', 'invalid'], True, None),
+    (['main.py'], False, "usage:"),
+])
+def test_main_dispatch_edge_cases(
+    mocker: MockerFixture, capsys: CaptureFixture, args: List[str], should_exit: bool, expected_output: str | None
+) -> None:
+    mocker.patch.object(sys, 'argv', args)
+    if should_exit:
+        with pytest.raises(SystemExit):
+            main_func()
+    else:
+        main_func()
+        captured = capsys.readouterr()
+        if expected_output:
+            assert expected_output in captured.out, f"Expected output '{expected_output}' not found in '{captured.out}' for args {args}"
