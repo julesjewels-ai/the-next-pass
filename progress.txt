@@ -34,3 +34,13 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## Session Start
+-   **Status**: In Progress.
+-   **Focus**: Generate Gap Analysis. Phase 3 completed. Added Phase 4 Career Financial Guidance.
+-   **Outcome**: Planned addition of `Compensation` data to `Job` entity, logic for financial modeling, and updated CLI to display projected compensation.
+
+## Session End
+-   **Status**: Completed.
+-   **Focus**: Implement Phase 4 Career Financial Guidance.
+-   **Outcome**: Implemented `Compensation Analytics` by adding salary and bonus to `Job` model, `get_compensation_estimate` service function, tests, and CLI formatting for `opportunities` command.

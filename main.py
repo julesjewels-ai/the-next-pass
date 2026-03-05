@@ -14,7 +14,8 @@ from src.core.services import (
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    get_skill_demand_report,
+    get_compensation_estimate
 )
 
 
@@ -66,7 +67,9 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         return
 
     for job in matches:
-        print(f"- {job.title} ({job.employer})")
+        comp = get_compensation_estimate(job)
+        comp_str = f"${comp['total_compensation']:,} (Base: ${comp['base_salary']:,}, Bonus: ${comp['signing_bonus']:,})"
+        print(f"- {job.title} ({job.employer}) - Est. {comp_str}")
 
     print("\nPreparation meets opportunity.")
 

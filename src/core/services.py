@@ -93,6 +93,23 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
     ]
 
 
+def get_compensation_estimate(job: Job) -> Dict[str, int]:
+    """
+    Returns the compensation estimate for a given job.
+
+    Args:
+        job: Job DTO.
+
+    Returns:
+        Dictionary with base salary and signing bonus.
+    """
+    return {
+        "base_salary": job.base_salary,
+        "signing_bonus": job.signing_bonus,
+        "total_compensation": job.base_salary + job.signing_bonus
+    }
+
+
 def get_skill_demand_report() -> Dict[str, int]:
     """
     Aggregates the frequency of required skills across all jobs and employers

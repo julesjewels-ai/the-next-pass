@@ -140,3 +140,21 @@ def test_match_opportunities_forensic_employer_not_found(
     titles = [job.title for job in matches]
 
     assert "Forensic Analyst" in titles, "Should still match if employer not found but job skills match"
+
+def test_get_compensation_estimate():
+    """Test the compensation estimate function."""
+    from src.core.services import get_compensation_estimate
+    from src.core.models import Job
+
+    job = Job(
+        title="Software Engineer",
+        employer="TechCorp",
+        required_skills=[],
+        base_salary=100000,
+        signing_bonus=10000
+    )
+
+    result = get_compensation_estimate(job)
+    assert result["base_salary"] == 100000
+    assert result["signing_bonus"] == 10000
+    assert result["total_compensation"] == 110000
