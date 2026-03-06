@@ -2,6 +2,7 @@
 Tests for the main CLI application logic.
 """
 import argparse
+import sys
 from typing import List
 from unittest.mock import Mock
 
@@ -9,7 +10,7 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import handle_employers, handle_opportunities, handle_demand, handle_translate, handle_match, main
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -137,3 +138,103 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+@pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    """Mock the translate_skills service."""
+    return mocker.patch("main.translate_skills")
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        {"Led warmups": "Managed team morning check-ins"},
+        ["Led warmups", "Managed team morning check-ins"]
+    ),
+    (
+        {},
+        ["--- Resume Translation"]
+    )
+])
+def test_handle_translate(
+    mock_translate_skills: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: dict[str, str],
+    expected_substrings: List[str]
+) -> None:
+    """Test handle_translate with various translations."""
+    args = argparse.Namespace(sport="Basketball", role="Point Guard")
+    mock_translate_skills.return_value = mock_return_value
+
+    handle_translate(args)
+
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out, f"Expected '{substring}' in output."
+
+    mock_translate_skills.assert_called_once()
+    call_arg = mock_translate_skills.call_args[0][0]
+    assert call_arg.sport == "Basketball"
+    assert call_arg.role == "Point Guard"
+
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    """Mock the match_careers service."""
+    return mocker.patch("main.match_careers")
+
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        [Job(title="Project Manager", employer="Any", required_skills=[])],
+        ["Project Manager", "Structure is gone. But your discipline remains."]
+    ),
+    (
+        [],
+        ["--- Career Matches", "Structure is gone. But your discipline remains."]
+    )
+])
+def test_handle_match(
+    mock_match_careers: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: List[Job],
+    expected_substrings: List[str]
+) -> None:
+    """Test handle_match with various returned careers."""
+    args = argparse.Namespace(grit=8, teamwork=9)
+    mock_match_careers.return_value = mock_return_value
+
+    handle_match(args)
+
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out, f"Expected '{substring}' in output."
+
+    mock_match_careers.assert_called_once_with(8, 9)
+
+@pytest.mark.parametrize("mock_argv, expected_handler_mock, expected_exit", [
+    (["main.py", "translate", "--sport", "Football"], "main.handle_translate", False),
+    (["main.py", "match"], "main.handle_match", False),
+    (["main.py", "employers", "--sport", "Basketball"], "main.handle_employers", False),
+    (["main.py", "opportunities", "--sport", "Tennis"], "main.handle_opportunities", False),
+    (["main.py", "demand"], "main.handle_demand", False),
+    (["main.py", "invalid_command"], None, True),
+])
+def test_main_dispatch_commands(
+    mocker: MockerFixture,
+    mock_argv: List[str],
+    expected_handler_mock: str | None,
+    expected_exit: bool,
+    capsys: CaptureFixture
+) -> None:
+    """Test CLI command routing."""
+    mocker.patch.object(sys, 'argv', mock_argv)
+
+    if expected_handler_mock:
+        mock_handler = mocker.patch(expected_handler_mock)
+
+    if expected_exit:
+        with pytest.raises(SystemExit):
+            main()
+    else:
+        main()
+        if expected_handler_mock:
+            mock_handler.assert_called_once()
