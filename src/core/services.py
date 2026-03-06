@@ -116,6 +116,23 @@ def get_skill_demand_report() -> Dict[str, int]:
     return dict(sorted(demand.items(), key=lambda item: item[1], reverse=True))
 
 
+def get_compensation_estimate(job: Job) -> Dict[str, int]:
+    """
+    Estimates the compensation for a given job.
+
+    Args:
+        job: The job opportunity (DTO).
+
+    Returns:
+        Dictionary containing base_salary, signing_bonus, and total compensation.
+    """
+    return {
+        "base_salary": job.base_salary,
+        "signing_bonus": job.signing_bonus,
+        "total": job.base_salary + job.signing_bonus,
+    }
+
+
 def match_opportunities(
     profile: AthleteProfile,
     grit_score: int,
