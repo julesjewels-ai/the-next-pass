@@ -18,21 +18,27 @@ def mock_jobs_db(mocker: MockerFixture) -> List[Job]:
             employer="MockCorp",
             min_grit=5,
             min_teamwork=5,
-            required_skills=["Analysis"]
+            required_skills=["Analysis"],
+            base_salary=75000.0,
+            signing_bonus=2000.0
         ),
         Job(
             title="Senior Forensic Analyst",
             employer="MockCorp",
             min_grit=9,
             min_teamwork=9,
-            required_skills=["Analysis", "Leadership"]
+            required_skills=["Analysis", "Leadership"],
+            base_salary=95000.0,
+            signing_bonus=5000.0
         ),
         Job(
             title="Unrelated Role",
             employer="OtherCorp",
             min_grit=5,
             min_teamwork=5,
-            required_skills=["Sales"]
+            required_skills=["Sales"],
+            base_salary=60000.0,
+            signing_bonus=0.0
         ),
     ]
     mocker.patch("src.core.services.JOBS_DB", jobs)

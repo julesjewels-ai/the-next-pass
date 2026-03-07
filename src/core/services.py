@@ -116,6 +116,20 @@ def get_skill_demand_report() -> Dict[str, int]:
     return dict(sorted(demand.items(), key=lambda item: item[1], reverse=True))
 
 
+def get_compensation_estimate(job: Job) -> float:
+    """
+    Calculates the total estimated compensation for a job opportunity based on
+    base salary and signing bonus.
+
+    Args:
+        job: The Job DTO.
+
+    Returns:
+        The total estimated compensation.
+    """
+    return job.base_salary + job.signing_bonus
+
+
 def match_opportunities(
     profile: AthleteProfile,
     grit_score: int,
