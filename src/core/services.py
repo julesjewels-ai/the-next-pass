@@ -116,6 +116,22 @@ def get_skill_demand_report() -> Dict[str, int]:
     return dict(sorted(demand.items(), key=lambda item: item[1], reverse=True))
 
 
+def get_compensation_estimate(job: Job) -> str:
+    """
+    Returns a formatted string estimating compensation.
+
+    Args:
+        job: The Job DTO containing base_salary and signing_bonus.
+
+    Returns:
+        Formatted string (e.g., "$X Base + $Y Bonus").
+    """
+    base_str = f"${job.base_salary:,} Base"
+    if job.signing_bonus > 0:
+        return f"{base_str} + ${job.signing_bonus:,} Bonus"
+    return base_str
+
+
 def match_opportunities(
     profile: AthleteProfile,
     grit_score: int,

@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## 2026-03-10 - Financial Guidance (Phase 4)
+-   **Status**: Completed.
+-   **Focus**: Implement Compensation Estimates.
+-   **Outcome**: Added `base_salary` and `signing_bonus` fields to `Job` DTO. Populated mock data for all roles in `JOBS_DB`. Created `get_compensation_estimate` service. Exposed output in CLI `opportunities` command. Validated with 100% passing tests and all gates (mypy, ruff, pydeps).
