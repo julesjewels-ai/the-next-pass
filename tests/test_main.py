@@ -9,7 +9,7 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import handle_employers, handle_opportunities, handle_demand, handle_translate, handle_match, main
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -137,3 +137,72 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+@pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    return mocker.patch("main.translate_skills")
+
+@pytest.mark.parametrize("mock_return, expected_out", [
+    ({"Leadership": "Project Management"}, ["Project Management"]),
+    ({}, ["Resume Translation"])
+])
+def test_handle_translate(mock_translate_skills: Mock, capsys: CaptureFixture, mock_return: dict, expected_out: List[str]) -> None:
+    mock_translate_skills.return_value = mock_return
+    args = argparse.Namespace(sport="Football", role="Captain")
+    handle_translate(args)
+    out = capsys.readouterr().out
+    for exp in expected_out:
+        assert exp in out, f"Expected '{exp}' in output, but got: {out}"
+    mock_translate_skills.assert_called_once()
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    return mocker.patch("main.match_careers")
+
+@pytest.mark.parametrize("mock_return, expected_out", [
+    ([Job(title="Software Engineer", employer="TechCorp", required_skills=["Coding"])], ["Software Engineer", "Structure is gone"]),
+    ([], ["Structure is gone"])
+])
+def test_handle_match(mock_match_careers: Mock, capsys: CaptureFixture, mock_return: List[Job], expected_out: List[str]) -> None:
+    mock_match_careers.return_value = mock_return
+    args = argparse.Namespace(grit=8, teamwork=9)
+    handle_match(args)
+    out = capsys.readouterr().out
+    for exp in expected_out:
+        assert exp in out, f"Expected '{exp}' in output, but got: {out}"
+    mock_match_careers.assert_called_once()
+
+@pytest.mark.parametrize("argv, handler_mock, expected_call", [
+    (["main.py", "translate", "--sport", "Football"], "main.handle_translate", True),
+    (["main.py", "match"], "main.handle_match", True),
+    (["main.py", "employers", "--sport", "Football"], "main.handle_employers", True),
+    (["main.py", "opportunities", "--sport", "Football"], "main.handle_opportunities", True),
+    (["main.py", "demand"], "main.handle_demand", True),
+])
+def test_main_dispatch_commands(
+    mocker: MockerFixture,
+    argv: List[str],
+    handler_mock: str,
+    expected_call: bool
+) -> None:
+    mocker.patch("sys.argv", argv)
+    mocked_handler = mocker.patch(handler_mock)
+
+    if expected_call:
+        main()
+        mocked_handler.assert_called_once()
+    else:
+        with pytest.raises(SystemExit):
+            main()
+        mocked_handler.assert_not_called()
+
+def test_main_invalid_command(mocker: MockerFixture) -> None:
+    mocker.patch("sys.argv", ["main.py", "invalid_command"])
+    with pytest.raises(SystemExit):
+        main()
+
+def test_main_no_args(mocker: MockerFixture, capsys: CaptureFixture) -> None:
+    mocker.patch("sys.argv", ["main.py"])
+    main()
+    out = capsys.readouterr()
+    assert "usage:" in out.err or "usage:" in out.out
