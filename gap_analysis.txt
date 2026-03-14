@@ -1,0 +1,1 @@
+Current state: "Skill Demand Analytics" is marked "In Progress" in IMPLEMENTATION_PLAN.md but "Completed" in progress.txt. The next missing feature from the README is "financial guidance".
