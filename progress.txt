@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## [Current Date] - Financial Guidance (Phase 3)
+-   **Status**: Completed.
+-   **Focus**: Implement financial guidance compensation estimates.
+-   **Outcome**: Added `base_salary` and `signing_bonus` to `Job` model. Created `get_compensation_estimate` in `src/core/services.py`. Updated `main.py` to display these estimates in the `opportunities` command. Implemented `tests/test_financial_guidance.py` and updated existing tests. Verified with Validation Gates.
