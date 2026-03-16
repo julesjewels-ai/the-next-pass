@@ -150,3 +150,20 @@ def match_opportunities(
                 matches.append(job)
 
     return matches
+
+
+def get_compensation_estimate(job: Job) -> str:
+    """
+    Returns a formatted compensation estimate string for a job.
+
+    Args:
+        job: The Job DTO.
+
+    Returns:
+        Formatted compensation string or 'Compensation not specified'.
+    """
+    if job.base_salary == 0 and job.signing_bonus == 0:
+        return 'Compensation not specified'
+    if job.signing_bonus == 0:
+        return f'${job.base_salary} base'
+    return f'${job.base_salary} base + ${job.signing_bonus} sign-on'
