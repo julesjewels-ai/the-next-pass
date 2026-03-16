@@ -2,14 +2,70 @@
 Tests for the main CLI application logic.
 """
 import argparse
-from typing import List
+import sys
 from unittest.mock import Mock
 
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import handle_employers, handle_opportunities, handle_demand, handle_translate, handle_match, main
+
+@pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    """Mock the translate_skills service."""
+    return mocker.patch("main.translate_skills")
+
+@pytest.mark.parametrize("mock_return, expected_out", [
+    (
+        {"Teamwork": "Cross-functional Collaboration"},
+        ["Athletic Context: \"Teamwork\"", "Resume Bullet:    \"Cross-functional Collaboration\""]
+    ),
+    (
+        {},
+        ["--- Resume Translation for Football Captain ---"]
+    )
+])
+def test_handle_translate(
+    mock_translate_skills: Mock,
+    capsys: CaptureFixture,
+    mock_return: dict[str, str],
+    expected_out: list[str]
+) -> None:
+    """Test handle_translate with valid and empty mappings."""
+    mock_translate_skills.return_value = mock_return
+    handle_translate(argparse.Namespace(sport="Football", role="Captain"))
+    captured = capsys.readouterr()
+    for exp in expected_out:
+        assert exp in captured.out, f"Missing expected output: {exp}"
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    """Mock the match_careers service."""
+    return mocker.patch("main.match_careers")
+
+@pytest.mark.parametrize("mock_return, expected_out", [
+    (
+        [Job(title="Software Engineer", employer="TechCorp", required_skills=["Coding"])],
+        ["- Software Engineer", "Structure is gone."]
+    ),
+    (
+        [],
+        ["Structure is gone."]
+    )
+])
+def test_handle_match(
+    mock_match_careers: Mock,
+    capsys: CaptureFixture,
+    mock_return: list[Job],
+    expected_out: list[str]
+) -> None:
+    """Test handle_match with various match scenarios."""
+    mock_match_careers.return_value = mock_return
+    handle_match(argparse.Namespace(grit=8, teamwork=9))
+    captured = capsys.readouterr()
+    for exp in expected_out:
+        assert exp in captured.out, f"Missing expected output: {exp}"
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -36,8 +92,8 @@ def mock_match_employers(mocker: MockerFixture) -> Mock:
 def test_handle_employers(
     mock_match_employers: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Employer],
-    expected_substrings: List[str]
+    mock_return_value: list[Employer],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_employers with various match scenarios."""
     # Arrange
@@ -78,8 +134,8 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 def test_handle_opportunities(
     mock_match_opportunities: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Job],
-    expected_substrings: List[str]
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_opportunities with various match scenarios."""
     # Arrange
@@ -137,3 +193,36 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+@pytest.mark.parametrize("argv, expect_exit, expect_help", [
+    (["main.py"], False, True),
+    (["main.py", "invalid_cmd"], True, False),
+])
+def test_main_dispatch(
+    mocker: MockerFixture,
+    capsys: CaptureFixture,
+    argv: list[str],
+    expect_exit: bool,
+    expect_help: bool
+) -> None:
+    """Test the main command dispatcher with valid/invalid inputs."""
+    mocker.patch.object(sys, "argv", argv)
+
+    if expect_exit:
+        with pytest.raises(SystemExit):
+            main()
+    else:
+        main()
+
+    captured = capsys.readouterr()
+    if expect_help:
+        assert "usage:" in captured.out or "Available commands" in captured.out, "Expected help text in output"
+
+def test_main_dispatch_valid_command(mocker: MockerFixture) -> None:
+    """Test main dispatching a valid command."""
+    mocker.patch.object(sys, "argv", ["main.py", "translate", "--sport", "Football"])
+    mock_handler = mocker.patch("main.handle_translate")
+
+    main()
+
+    mock_handler.assert_called_once()
