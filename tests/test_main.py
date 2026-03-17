@@ -67,8 +67,12 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 
 @pytest.mark.parametrize("mock_return_value, expected_substrings", [
     (
-        [Job(title="Software Engineer", employer="TechCorp", required_skills=["Coding"])],
-        ["Software Engineer", "(TechCorp)"]
+        [Job(title="Software Engineer", employer="TechCorp", required_skills=["Coding"], base_salary=100000, signing_bonus=10000)],
+        ["Software Engineer", "(TechCorp)", "$100000 base + $10000 sign-on"]
+    ),
+    (
+        [Job(title="Consultant", employer="BizCorp", required_skills=["Strategy"], base_salary=80000)],
+        ["Consultant", "(BizCorp)", "$80000 base"]
     ),
     (
         [],
