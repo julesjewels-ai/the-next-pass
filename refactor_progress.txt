@@ -1,0 +1,1 @@
+tests/test_main.py: added parametrized tests for CLI handlers and dispatch
