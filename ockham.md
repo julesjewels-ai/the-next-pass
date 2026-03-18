@@ -6,3 +6,4 @@ Highest Complexity: 4
 Action: NO_ACTION_REQUIRED
 
 No functions exceeded the complexity threshold of 8. The codebase is clean.
+- Target: main.py: main dispatch and handlers. Delta: Complexity 2 -> 2. Summary: Added parametrization tests for main function routing and missing handlers.
