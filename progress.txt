@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## 2026-03-19 - Financial Guidance (Phase 4)
+-   **Status**: Completed.
+-   **Focus**: Implement Compensation Estimates.
+-   **Outcome**: Added base_salary and signing_bonus to Job model with Pydantic ge=0 input validation (GRASP SCP requirement met). Extended JOBS_DB with realistic compensation values. Added get_compensation_estimate in services to appropriately format base and sign-on compensation. Displayed formatted comp in CLI opportunities command. Built parametrized tests in tests/test_financial_guidance.py. All validation gates ran successfully.
