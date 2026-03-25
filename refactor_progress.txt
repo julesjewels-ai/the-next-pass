@@ -1,0 +1,3 @@
+main.py handle_translate
+main.py handle_match
+main.py main
