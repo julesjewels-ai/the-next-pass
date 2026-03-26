@@ -137,3 +137,25 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+def test_main_no_args(mocker: MockerFixture, capsys: CaptureFixture) -> None:
+    """Test main execution with no arguments prints help."""
+    import sys
+    mocker.patch.object(sys, 'argv', ["main.py"])
+    import main
+    main.main()
+    captured = capsys.readouterr()
+    assert "usage:" in captured.out
+    assert "The 98%: Career Platform" in captured.out
+
+
+def test_main_invalid_command(mocker: MockerFixture, capsys: CaptureFixture) -> None:
+    """Test main execution with an invalid command."""
+    import sys
+    mocker.patch.object(sys, 'argv', ["main.py", "invalid_command"])
+    import main
+    with pytest.raises(SystemExit):
+        main.main()
+    captured = capsys.readouterr()
+    assert "invalid choice: 'invalid_command'" in captured.err
