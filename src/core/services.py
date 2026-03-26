@@ -93,6 +93,17 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
     ]
 
 
+def get_compensation_estimate(base_salary: int, signing_bonus: int) -> str:
+    """
+    Calculates and formats compensation estimates.
+    """
+    if base_salary == 0 and signing_bonus == 0:
+        return "Compensation not specified"
+    if signing_bonus == 0:
+        return f"${base_salary:,} base"
+    return f"${base_salary:,} base + ${signing_bonus:,} sign-on"
+
+
 def get_skill_demand_report() -> Dict[str, int]:
     """
     Aggregates the frequency of required skills across all jobs and employers

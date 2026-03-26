@@ -20,7 +20,10 @@
     -   [x] **CLI Integration**: Expose `opportunities` command.
 
 5.  **Analytics and Reporting (Phase 3)**
-    -   [ ] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand. (In Progress)
+    -   [x] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand. (Completed)
+
+6.  **Financial Guidance (Phase 4)**
+    -   [ ] **Compensation Estimates**: Enhance Job model with base_salary and signing_bonus. Create get_compensation_estimate service and integrate it into the CLI.
 
 ## Current Gap Analysis
--   Phase 2 is complete. Moving on to Phase 3: Analytics and Reporting. The current highest priority task is to implement "Skill Demand Analytics".
+-   Phase 3 is complete. Moving on to Phase 4: Financial Guidance. The current highest priority task is to implement "Compensation Estimates".
