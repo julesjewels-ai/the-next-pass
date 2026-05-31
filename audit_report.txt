@@ -1,0 +1,4 @@
+Name     Version ID             Fix Versions
+-------- ------- -------------- ------------
+pygments 2.19.2  CVE-2026-4539  2.20.0
+pytest   9.0.2   CVE-2025-71176 9.0.3
