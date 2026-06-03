@@ -2,14 +2,21 @@
 Tests for the main CLI application logic.
 """
 import argparse
-from typing import List
+import sys
 from unittest.mock import Mock
 
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import (
+    handle_employers,
+    handle_opportunities,
+    handle_demand,
+    handle_translate,
+    handle_match,
+    main,
+)
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -36,8 +43,8 @@ def mock_match_employers(mocker: MockerFixture) -> Mock:
 def test_handle_employers(
     mock_match_employers: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Employer],
-    expected_substrings: List[str]
+    mock_return_value: list[Employer],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_employers with various match scenarios."""
     # Arrange
@@ -78,8 +85,8 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 def test_handle_opportunities(
     mock_match_opportunities: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Job],
-    expected_substrings: List[str]
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_opportunities with various match scenarios."""
     # Arrange
@@ -126,6 +133,119 @@ def test_handle_demand_with_data(mock_get_skill_demand_report: Mock, capsys: Cap
     assert "- Teamwork: Required by 3 role(s)" in captured.out
     assert "Train for what the market demands." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    """Mock the translate_skills service."""
+    return mocker.patch("main.translate_skills")
+
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        {"Leadership": "Managed a team of 50"},
+        ["Resume Translation for Soccer Captain", "Athletic Context: \"Leadership\"", "Resume Bullet:    \"Managed a team of 50\""]
+    ),
+    (
+        {},
+        ["Resume Translation for Soccer Captain"]
+    )
+])
+def test_handle_translate(
+    mock_translate_skills: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: dict[str, str],
+    expected_substrings: list[str]
+) -> None:
+    """Test handle_translate with various match scenarios."""
+    args = argparse.Namespace(sport="Soccer", role="Captain")
+    mock_translate_skills.return_value = mock_return_value
+
+    handle_translate(args)
+
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out, f"Expected '{substring}' in output"
+
+    mock_translate_skills.assert_called_once()
+    call_arg = mock_translate_skills.call_args[0][0]
+    assert isinstance(call_arg, AthleteProfile)
+    assert call_arg.sport == "Soccer"
+    assert call_arg.role == "Captain"
+
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    """Mock the match_careers service."""
+    return mocker.patch("main.match_careers")
+
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        [Job(title="Sales Executive", employer="BizCorp", required_skills=["Resilience"])],
+        ["Career Matches (Grit: 8, Teamwork: 9)", "- Sales Executive", "Structure is gone. But your discipline remains."]
+    ),
+    (
+        [],
+        ["Career Matches (Grit: 8, Teamwork: 9)", "Structure is gone. But your discipline remains."]
+    )
+])
+def test_handle_match(
+    mock_match_careers: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
+) -> None:
+    """Test handle_match with various match scenarios."""
+    args = argparse.Namespace(grit=8, teamwork=9)
+    mock_match_careers.return_value = mock_return_value
+
+    handle_match(args)
+
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out, f"Expected '{substring}' in output"
+
+    mock_match_careers.assert_called_once_with(8, 9)
+
+
+@pytest.mark.parametrize("argv, expected_exit, expected_out", [
+    (
+        ["main.py", "translate", "--sport", "Tennis"],
+        False,
+        "Resume Translation for Tennis Player"
+    ),
+    (
+        ["main.py", "invalid"],
+        True,
+        ""
+    ),
+    (
+        ["main.py"],
+        False,
+        "usage: main.py"
+    )
+])
+def test_main_dispatch(
+    mocker: MockerFixture,
+    capsys: CaptureFixture,
+    argv: list[str],
+    expected_exit: bool,
+    expected_out: str
+) -> None:
+    """Test main argparse dispatch logic."""
+    mocker.patch.object(sys, 'argv', argv)
+
+    # Mock services to avoid hitting real logic during integration test
+    mocker.patch("main.translate_skills", return_value={})
+
+    if expected_exit:
+        with pytest.raises(SystemExit):
+            main()
+    else:
+        main()
+        captured = capsys.readouterr()
+        assert expected_out in captured.out, f"Expected '{expected_out}' in output"
 
 def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: CaptureFixture) -> None:
     """Test handle_demand when report returns empty."""
