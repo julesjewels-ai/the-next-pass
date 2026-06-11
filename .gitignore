@@ -19,3 +19,4 @@ env/
 # Media
 *.mp4
 output_story.mp4
+.mypy_cache/
