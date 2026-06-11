@@ -19,8 +19,11 @@
     -   [x] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
     -   [x] **CLI Integration**: Expose `opportunities` command.
 
-5.  **Analytics and Reporting (Phase 3)**
-    -   [ ] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand. (In Progress)
+5.  **Analytics and Reporting (Phase 3) (Completed)**
+    -   [x] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand.
+
+6.  **Financial Guidance (Phase 4)**
+    -   [x] **Compensation Estimation**: Build a service to calculate and display expected base salary and signing bonuses for job opportunities based on role requirements.
 
 ## Current Gap Analysis
--   Phase 2 is complete. Moving on to Phase 3: Analytics and Reporting. The current highest priority task is to implement "Skill Demand Analytics".
+-   Phase 4 is complete. All current features are implemented.
