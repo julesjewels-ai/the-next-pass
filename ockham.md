@@ -6,3 +6,8 @@ Highest Complexity: 4
 Action: NO_ACTION_REQUIRED
 
 No functions exceeded the complexity threshold of 8. The codebase is clean.
+
+## Coverage Gap Addressed
+Target: main.py main
+Delta: Complexity 2 -> 2
+Summary: Added comprehensive parameterized tests for dispatch logic and CLI handlers to eliminate branch coverage gaps.
