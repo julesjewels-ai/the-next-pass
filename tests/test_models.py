@@ -46,6 +46,8 @@ def test_job_creation_defaults():
     assert job.min_grit == 0
     assert job.min_teamwork == 0
     assert job.required_skills == []
+    assert job.base_salary == 0
+    assert job.signing_bonus == 0
 
 
 def test_job_creation_full():
@@ -55,10 +57,32 @@ def test_job_creation_full():
         employer="TechCorp",
         min_grit=8,
         min_teamwork=7,
-        required_skills=["Leadership", "Strategic Analysis"]
+        required_skills=["Leadership", "Strategic Analysis"],
+        base_salary=100000,
+        signing_bonus=15000
     )
     assert job.title == "Product Manager"
     assert job.employer == "TechCorp"
     assert job.min_grit == 8
     assert job.min_teamwork == 7
     assert job.required_skills == ["Leadership", "Strategic Analysis"]
+    assert job.base_salary == 100000
+    assert job.signing_bonus == 15000
+
+
+def test_job_creation_invalid_salary():
+    """Test that creating a Job with negative salary raises ValidationError."""
+    with pytest.raises(ValidationError):
+        Job(
+            title="Software Engineer",
+            base_salary=-1000
+        )
+
+
+def test_job_creation_invalid_bonus():
+    """Test that creating a Job with negative signing bonus raises ValidationError."""
+    with pytest.raises(ValidationError):
+        Job(
+            title="Software Engineer",
+            signing_bonus=-500
+        )
