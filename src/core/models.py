@@ -31,3 +31,9 @@ class Employer(BaseModel):
     name: str = Field(..., description="The company name")
     industry: str = Field(..., description="The industry sector")
     required_skills: List[str] = Field(..., description="List of required skills")
+
+
+class CompensationData(BaseModel):
+    """Represents compensation details for financial guidance."""
+    base_salary: int = Field(..., ge=0, description="The base salary amount")
+    signing_bonus: int = Field(..., ge=0, description="The signing bonus amount")
