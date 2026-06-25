@@ -34,3 +34,7 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+## 2026-06-25 - Financial Guidance (Phase 4)
+-   **Status**: Completed.
+-   **Focus**: Implement Compensation Estimator.
+-   **Outcome**: Added `CompensationData` DTO to `src/core/models.py` and `get_compensation_estimate` to `src/core/services.py` with Pydantic validation (Input Validation SCP). Added `compensation` CLI command and tests. All validation gates passed.

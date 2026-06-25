@@ -14,7 +14,8 @@ from src.core.services import (
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    get_skill_demand_report,
+    get_compensation_estimate
 )
 
 
@@ -83,6 +84,17 @@ def handle_demand(args: argparse.Namespace) -> None:
         print(f"- {skill}: Required by {count} role(s)")
 
     print("\nTrain for what the market demands.")
+
+
+def handle_compensation(args: argparse.Namespace) -> None:
+    """Handles the 'compensation' command."""
+    print("\n--- Compensation Estimate ---")
+    try:
+        estimate = get_compensation_estimate(args.base, args.bonus)
+        print(estimate)
+    except ValueError as e:
+        print(f"Error calculating compensation: {e}")
+    print("\nKnow your worth.")
 
 
 def main() -> None:
@@ -176,6 +188,18 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: compensation
+    compensation_parser = subparsers.add_parser(
+        'compensation',
+        help='Calculate estimated compensation'
+    )
+    compensation_parser.add_argument(
+        '--base', type=int, default=0, help='Base salary amount'
+    )
+    compensation_parser.add_argument(
+        '--bonus', type=int, default=0, help='Signing bonus amount'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
@@ -184,6 +208,7 @@ def main() -> None:
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'compensation': handle_compensation,
     }
 
     if args.command in command_handlers:

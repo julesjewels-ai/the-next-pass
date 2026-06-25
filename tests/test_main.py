@@ -9,7 +9,7 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import handle_employers, handle_opportunities, handle_demand, handle_compensation
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -137,3 +137,32 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+@pytest.fixture
+def mock_get_compensation_estimate(mocker: MockerFixture) -> Mock:
+    """Mock the get_compensation_estimate service."""
+    return mocker.patch("main.get_compensation_estimate")
+
+def test_handle_compensation_success(mock_get_compensation_estimate: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_compensation on success."""
+    mock_get_compensation_estimate.return_value = "$100,000 base"
+    args = argparse.Namespace(base=100000, bonus=0)
+
+    handle_compensation(args)
+    captured = capsys.readouterr()
+
+    assert "--- Compensation Estimate ---" in captured.out
+    assert "$100,000 base" in captured.out
+    assert "Know your worth." in captured.out
+    mock_get_compensation_estimate.assert_called_once_with(100000, 0)
+
+def test_handle_compensation_validation_error(mock_get_compensation_estimate: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_compensation when validation fails."""
+    mock_get_compensation_estimate.side_effect = ValueError("Invalid input")
+    args = argparse.Namespace(base=-100000, bonus=0)
+
+    handle_compensation(args)
+    captured = capsys.readouterr()
+
+    assert "Error calculating compensation: Invalid input" in captured.out
+    mock_get_compensation_estimate.assert_called_once_with(-100000, 0)
