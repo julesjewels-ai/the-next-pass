@@ -12,7 +12,7 @@ from src.core.services import get_compensation_estimate
     (-50000, 0, ValidationError),
     (100000, -10000, ValidationError),
 ])
-def test_get_compensation_estimate(base: int, bonus: int, expected: str | type) -> None:
+def test_get_compensation_estimate(base: int, bonus: int, expected: type | str) -> None:
     """Test get_compensation_estimate with valid and invalid inputs."""
     if isinstance(expected, type) and issubclass(expected, Exception):
         with pytest.raises(expected):

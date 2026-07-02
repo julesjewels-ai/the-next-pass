@@ -8,6 +8,7 @@ skills into corporate value.
 
 import argparse
 from typing import Dict, Callable
+from pydantic import ValidationError
 from src.core.models import AthleteProfile
 from src.core.services import (
     translate_skills,
@@ -89,9 +90,12 @@ def handle_demand(args: argparse.Namespace) -> None:
 def handle_guidance(args: argparse.Namespace) -> None:
     """Handles the 'guidance' command."""
     print("\n--- Financial Guidance ---")
-    estimate = get_compensation_estimate(args.base, args.bonus)
-    print(f"Estimated Compensation: {estimate}")
-    print("\nKnow your worth.")
+    try:
+        estimate = get_compensation_estimate(args.base, args.bonus)
+        print(f"Estimated Compensation: {estimate}")
+        print("\nKnow your worth.")
+    except ValidationError:
+        print("Error: Base salary and signing bonus must be non-negative integers.")
 
 
 def main() -> None:

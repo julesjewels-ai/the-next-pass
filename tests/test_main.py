@@ -161,3 +161,19 @@ def test_handle_guidance(mock_get_compensation_estimate: Mock, capsys: CaptureFi
 
     # Verify service was called correctly
     mock_get_compensation_estimate.assert_called_once_with(100000, 15000)
+
+def test_handle_guidance_validation_error(mock_get_compensation_estimate: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_guidance command with invalid inputs."""
+    from pydantic import ValidationError
+
+    # Arrange
+    args = argparse.Namespace(base=-1000, bonus=0)
+    mock_get_compensation_estimate.side_effect = ValidationError.from_exception_data("test", line_errors=[])
+
+    # Act
+    handle_guidance(args)
+
+    # Assert
+    captured = capsys.readouterr()
+    assert "--- Financial Guidance ---" in captured.out
+    assert "Error: Base salary and signing bonus must be non-negative integers." in captured.out
