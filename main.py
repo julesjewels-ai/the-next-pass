@@ -14,7 +14,8 @@ from src.core.services import (
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    get_skill_demand_report,
+    get_compensation_estimate
 )
 
 
@@ -83,6 +84,14 @@ def handle_demand(args: argparse.Namespace) -> None:
         print(f"- {skill}: Required by {count} role(s)")
 
     print("\nTrain for what the market demands.")
+
+
+def handle_guidance(args: argparse.Namespace) -> None:
+    """Handles the 'guidance' command."""
+    print("\n--- Financial Guidance ---")
+    estimate = get_compensation_estimate(args.base, args.bonus)
+    print(f"Estimated Compensation: {estimate}")
+    print("\nKnow your worth.")
 
 
 def main() -> None:
@@ -176,6 +185,18 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: guidance
+    guidance_parser = subparsers.add_parser(
+        'guidance',
+        help='Estimate total compensation for financial planning'
+    )
+    guidance_parser.add_argument(
+        '--base', type=int, required=True, help='Base salary amount'
+    )
+    guidance_parser.add_argument(
+        '--bonus', type=int, default=0, help='Signing bonus amount'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
@@ -184,6 +205,7 @@ def main() -> None:
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'guidance': handle_guidance,
     }
 
     if args.command in command_handlers:

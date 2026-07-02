@@ -9,7 +9,7 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import handle_employers, handle_opportunities, handle_demand, handle_guidance
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -137,3 +137,27 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.fixture
+def mock_get_compensation_estimate(mocker: MockerFixture) -> Mock:
+    """Mock the get_compensation_estimate service."""
+    return mocker.patch("main.get_compensation_estimate")
+
+def test_handle_guidance(mock_get_compensation_estimate: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_guidance command."""
+    # Arrange
+    args = argparse.Namespace(base=100000, bonus=15000)
+    mock_get_compensation_estimate.return_value = "$100,000 base + $15,000 sign-on"
+
+    # Act
+    handle_guidance(args)
+
+    # Assert
+    captured = capsys.readouterr()
+    assert "--- Financial Guidance ---" in captured.out
+    assert "Estimated Compensation: $100,000 base + $15,000 sign-on" in captured.out
+    assert "Know your worth." in captured.out
+
+    # Verify service was called correctly
+    mock_get_compensation_estimate.assert_called_once_with(100000, 15000)
