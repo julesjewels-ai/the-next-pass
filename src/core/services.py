@@ -4,7 +4,7 @@ Handles business logic for skill translation and career matching.
 """
 from typing import List, Dict
 
-from src.core.models import AthleteProfile, Job, Employer
+from src.core.models import AthleteProfile, Job, Employer, Compensation
 from src.core.data import (
     SKILL_DB,
     UNIVERSAL_SKILLS,
@@ -150,3 +150,26 @@ def match_opportunities(
                 matches.append(job)
 
     return matches
+
+
+def get_compensation_estimate(base_salary: int, signing_bonus: int) -> str:
+    """
+    Estimates total compensation and formats it for presentation.
+
+    Args:
+        base_salary: The base salary amount.
+        signing_bonus: The signing bonus amount.
+
+    Returns:
+        A formatted string representing the total compensation.
+    """
+    # Create DTO to validate inputs (ge=0)
+    comp = Compensation(base_salary=base_salary, signing_bonus=signing_bonus)
+
+    if comp.base_salary == 0 and comp.signing_bonus == 0:
+        return "Compensation not specified"
+
+    if comp.signing_bonus == 0:
+        return f"${comp.base_salary:,} base"
+
+    return f"${comp.base_salary:,} base + ${comp.signing_bonus:,} sign-on"

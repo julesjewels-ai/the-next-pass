@@ -34,3 +34,7 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+## [Current Date] - Phase 4 Financial Guidance
+-   **Status**: Completed.
+-   **Focus**: Implement financial guidance estimator.
+-   **Outcome**: Implemented Compensation DTO, get_compensation_estimate service, and guidance command in CLI.
