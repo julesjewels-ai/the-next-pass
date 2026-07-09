@@ -3,7 +3,23 @@ Unit tests for core application logic.
 """
 
 from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers
+import pytest
+from src.core.services import translate_skills, match_careers, get_compensation_estimate
+
+
+@pytest.mark.parametrize(
+    "base_salary, signing_bonus, expected",
+    [
+        (100000, 20000, "$100,000 base + $20,000 sign-on"),
+        (90000, 0, "$90,000 base"),
+        (0, 0, "Compensation not specified"),
+        (0, 10000, "$0 base + $10,000 sign-on"),
+        (150000, 50000, "$150,000 base + $50,000 sign-on"),
+    ]
+)
+def test_get_compensation_estimate(base_salary: int, signing_bonus: int, expected: str) -> None:
+    """Test get_compensation_estimate formats values correctly."""
+    assert get_compensation_estimate(base_salary, signing_bonus) == expected
 
 
 def test_skill_translation_captain():
