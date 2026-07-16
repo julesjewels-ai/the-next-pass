@@ -14,8 +14,11 @@ from src.core.services import (
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    get_skill_demand_report,
+    get_compensation_estimate
 )
+from pydantic import ValidationError
+from src.core.models import CompensationRequest
 
 
 def handle_translate(args: argparse.Namespace) -> None:
@@ -83,6 +86,18 @@ def handle_demand(args: argparse.Namespace) -> None:
         print(f"- {skill}: Required by {count} role(s)")
 
     print("\nTrain for what the market demands.")
+
+
+def handle_compensation(args: argparse.Namespace) -> None:
+    """Handles the 'compensation' command."""
+    try:
+        req = CompensationRequest(base_salary=args.base, signing_bonus=args.bonus)
+        estimate = get_compensation_estimate(req.base_salary, req.signing_bonus)
+        print("\n--- Compensation Estimate ---")
+        print(f"Estimate: {estimate}")
+        print("\nKnow your worth.")
+    except ValidationError as e:
+        print(f"\nError: Invalid compensation values provided. {e}")
 
 
 def main() -> None:
@@ -176,6 +191,18 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: compensation
+    compensation_parser = subparsers.add_parser(
+        'compensation',
+        help='Estimate compensation based on base and bonus'
+    )
+    compensation_parser.add_argument(
+        '--base', type=int, default=0, help='Base salary amount'
+    )
+    compensation_parser.add_argument(
+        '--bonus', type=int, default=0, help='Signing bonus amount'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
@@ -184,6 +211,7 @@ def main() -> None:
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'compensation': handle_compensation,
     }
 
     if args.command in command_handlers:
