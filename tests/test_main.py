@@ -9,7 +9,7 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+from main import handle_employers, handle_opportunities, handle_demand, handle_compensation
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -137,3 +137,42 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+@pytest.fixture
+def mock_get_compensation_estimate(mocker: MockerFixture) -> Mock:
+    """Mock the get_compensation_estimate service."""
+    return mocker.patch("main.get_compensation_estimate")
+
+@pytest.mark.parametrize("base, bonus, mock_return, expected_substrings", [
+    (100000, 0, "$100,000 base", ["--- Compensation Estimate ---", "Estimate: $100,000 base", "Know your worth."]),
+    (150000, 25000, "$150,000 base + $25,000 sign-on", ["--- Compensation Estimate ---", "Estimate: $150,000 base + $25,000 sign-on", "Know your worth."])
+])
+def test_handle_compensation_valid(
+    mock_get_compensation_estimate: Mock,
+    capsys: CaptureFixture,
+    base: int,
+    bonus: int,
+    mock_return: str,
+    expected_substrings: List[str]
+) -> None:
+    """Test handle_compensation with valid arguments."""
+    mock_get_compensation_estimate.return_value = mock_return
+    args = argparse.Namespace(base=base, bonus=bonus)
+
+    handle_compensation(args)
+    captured = capsys.readouterr()
+
+    for substring in expected_substrings:
+        assert substring in captured.out
+    mock_get_compensation_estimate.assert_called_once_with(base, bonus)
+
+def test_handle_compensation_invalid(
+    capsys: CaptureFixture
+) -> None:
+    """Test handle_compensation with invalid arguments catching ValidationError."""
+    args = argparse.Namespace(base=-1, bonus=0)
+
+    handle_compensation(args)
+    captured = capsys.readouterr()
+
+    assert "Error: Invalid compensation values provided." in captured.out

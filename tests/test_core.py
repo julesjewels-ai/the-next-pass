@@ -2,8 +2,10 @@
 Unit tests for core application logic.
 """
 
-from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers
+import pytest
+from pydantic import ValidationError
+from src.core.models import AthleteProfile, CompensationRequest
+from src.core.services import translate_skills, match_careers, get_compensation_estimate
 
 
 def test_skill_translation_captain():
@@ -73,3 +75,22 @@ def test_skill_translation_composite_football_captain():
 
     assert "Operational Command" in result
     assert "large-scale team maneuvers" in result["Operational Command"]
+
+
+@pytest.mark.parametrize("base, bonus, expected", [
+    (0, 0, "Compensation not specified"),
+    (100000, 0, "$100,000 base"),
+    (150000, 25000, "$150,000 base + $25,000 sign-on"),
+    (-1, 0, ValidationError),
+    (0, -1, ValidationError),
+])
+def test_get_compensation_estimate(base, bonus, expected):
+    """Test compensation estimate logic and Pydantic validation boundaries."""
+    if isinstance(expected, type) and issubclass(expected, Exception):
+        with pytest.raises(expected):
+            req = CompensationRequest(base_salary=base, signing_bonus=bonus)
+            get_compensation_estimate(req.base_salary, req.signing_bonus)
+    else:
+        req = CompensationRequest(base_salary=base, signing_bonus=bonus)
+        result = get_compensation_estimate(req.base_salary, req.signing_bonus)
+        assert result == expected
