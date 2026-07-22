@@ -9,7 +9,8 @@ import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
 from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+import sys
+from main import handle_employers, handle_opportunities, handle_demand, handle_translate, handle_match, main
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -109,6 +110,78 @@ def test_handle_opportunities(
     assert teamwork_arg == 9
 
 @pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    """Mock the translate_skills service."""
+    return mocker.patch("main.translate_skills")
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        {"Led drills": "Managed daily operations"},
+        ["--- Resume Translation for Football Captain ---", "Athletic Context: \"Led drills\"", "Resume Bullet:    \"Managed daily operations\""]
+    ),
+    (
+        {},
+        ["--- Resume Translation for Football Captain ---"]
+    )
+])
+def test_handle_translate(
+    mock_translate_skills: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: dict[str, str],
+    expected_substrings: list[str]
+) -> None:
+    """Test handle_translate with various return values."""
+    args = argparse.Namespace(sport="Football", role="Captain")
+    mock_translate_skills.return_value = mock_return_value
+
+    handle_translate(args)
+
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out, f"Missing expected output: {substring}"
+
+    mock_translate_skills.assert_called_once()
+    call_arg = mock_translate_skills.call_args[0][0]
+    assert isinstance(call_arg, AthleteProfile)
+    assert call_arg.sport == "Football"
+    assert call_arg.role == "Captain"
+
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    """Mock the match_careers service."""
+    return mocker.patch("main.match_careers")
+
+@pytest.mark.parametrize("mock_return_value, expected_substrings", [
+    (
+        [Job(title="Sales Rep", employer="Any", required_skills=[])],
+        ["--- Career Matches (Grit: 7, Teamwork: 8) ---", "- Sales Rep", "Structure is gone"]
+    ),
+    (
+        [],
+        ["--- Career Matches (Grit: 7, Teamwork: 8) ---", "Structure is gone"]
+    )
+])
+def test_handle_match(
+    mock_match_careers: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
+) -> None:
+    """Test handle_match with various return values."""
+    args = argparse.Namespace(grit=7, teamwork=8)
+    mock_match_careers.return_value = mock_return_value
+
+    handle_match(args)
+
+    captured = capsys.readouterr()
+    for substring in expected_substrings:
+        assert substring in captured.out, f"Missing expected output: {substring}"
+
+    mock_match_careers.assert_called_once_with(7, 8)
+
+
+@pytest.fixture
 def mock_get_skill_demand_report(mocker: MockerFixture) -> Mock:
     """Mock the get_skill_demand_report service."""
     return mocker.patch("main.get_skill_demand_report")
@@ -137,3 +210,46 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.mark.parametrize("argv, handler_mock_name", [
+    (["main.py", "translate", "--sport", "Football"], "mock_handle_translate"),
+    (["main.py", "match"], "mock_handle_match"),
+    (["main.py", "employers", "--sport", "Football"], "mock_handle_employers"),
+    (["main.py", "opportunities", "--sport", "Football"], "mock_handle_opportunities"),
+    (["main.py", "demand"], "mock_handle_demand"),
+])
+def test_main_dispatch(
+    mocker: MockerFixture,
+    argv: list[str],
+    handler_mock_name: str
+) -> None:
+    """Test main function dispatches to correct handler."""
+    mocker.patch.object(sys, 'argv', argv)
+
+    mock_handlers = {
+        "mock_handle_translate": mocker.patch("main.handle_translate"),
+        "mock_handle_match": mocker.patch("main.handle_match"),
+        "mock_handle_employers": mocker.patch("main.handle_employers"),
+        "mock_handle_opportunities": mocker.patch("main.handle_opportunities"),
+        "mock_handle_demand": mocker.patch("main.handle_demand"),
+    }
+
+    main()
+
+    mock_handlers[handler_mock_name].assert_called_once()
+    for name, mock in mock_handlers.items():
+        if name != handler_mock_name:
+            mock.assert_not_called()
+
+def test_main_no_command(
+    mocker: MockerFixture,
+    capsys: CaptureFixture
+) -> None:
+    """Test main function when no command is provided."""
+    mocker.patch.object(sys, 'argv', ["main.py"])
+
+    main()
+
+    captured = capsys.readouterr()
+    assert "usage:" in captured.out or "usage:" in captured.err
