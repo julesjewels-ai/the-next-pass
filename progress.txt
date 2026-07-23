@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## [Current Date] - Compensation Analytics (Phase 3)
+-   **Status**: Completed.
+-   **Focus**: Implement Compensation Analytics formatting service.
+-   **Outcome**: Added `get_compensation_estimate` in `src/core/services.py` to format salaries and signing bonuses with thousands separators and bounds checking. Verified with parameterized tests in `tests/test_analytics.py`.
