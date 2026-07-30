@@ -2,11 +2,11 @@
 Tests for employer matching logic in the service layer.
 """
 import pytest
+
+from src.core.data import SKILL_LEADERSHIP
 from src.core.models import AthleteProfile, Employer
 from src.core.services import match_employers
-from src.core.data import (
-    SKILL_LEADERSHIP
-)
+
 
 @pytest.fixture
 def mock_employers(mocker):

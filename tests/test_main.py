@@ -2,14 +2,23 @@
 Tests for the main CLI application logic.
 """
 import argparse
-from typing import List
+import sys
 from unittest.mock import Mock
 
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
-from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+
+from main import (
+    handle_demand,
+    handle_employers,
+    handle_match,
+    handle_opportunities,
+    handle_translate,
+    main,
+)
+from src.core.models import AthleteProfile, Employer, Job
+
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -36,8 +45,8 @@ def mock_match_employers(mocker: MockerFixture) -> Mock:
 def test_handle_employers(
     mock_match_employers: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Employer],
-    expected_substrings: List[str]
+    mock_return_value: list[Employer],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_employers with various match scenarios."""
     # Arrange
@@ -78,8 +87,8 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 def test_handle_opportunities(
     mock_match_opportunities: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Job],
-    expected_substrings: List[str]
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_opportunities with various match scenarios."""
     # Arrange
@@ -137,3 +146,59 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.fixture
+def mock_translate_skills(mocker: MockerFixture) -> Mock:
+    return mocker.patch("main.translate_skills")
+
+def test_handle_translate(mock_translate_skills: Mock, capsys: CaptureFixture) -> None:
+    mock_translate_skills.return_value = {"Leadership": "Coordinated team"}
+    args = argparse.Namespace(sport="Football", role="Captain")
+
+    handle_translate(args)
+    captured = capsys.readouterr()
+
+    assert "--- Resume Translation for Football Captain ---" in captured.out
+    assert "Athletic Context: \"Leadership\"" in captured.out
+    assert "Resume Bullet:    \"Coordinated team\"" in captured.out
+    mock_translate_skills.assert_called_once()
+
+@pytest.fixture
+def mock_match_careers(mocker: MockerFixture) -> Mock:
+    return mocker.patch("main.match_careers")
+
+def test_handle_match(mock_match_careers: Mock, capsys: CaptureFixture) -> None:
+    mock_match_careers.return_value = [Job(title="Software Engineer")]
+    args = argparse.Namespace(grit=8, teamwork=9)
+
+    handle_match(args)
+    captured = capsys.readouterr()
+
+    assert "--- Career Matches (Grit: 8, Teamwork: 9) ---" in captured.out
+    assert "- Software Engineer" in captured.out
+    mock_match_careers.assert_called_once_with(8, 9)
+
+@pytest.mark.parametrize("argv, expected_call, handler_mock", [
+    (["main.py", "translate", "--sport", "Football", "--role", "Captain"], "handle_translate", "main.handle_translate"),
+    (["main.py", "match", "--grit", "8", "--teamwork", "9"], "handle_match", "main.handle_match"),
+    (["main.py", "employers", "--sport", "Football", "--role", "Captain"], "handle_employers", "main.handle_employers"),
+    (["main.py", "opportunities", "--sport", "Football", "--role", "Captain", "--grit", "8", "--teamwork", "9"], "handle_opportunities", "main.handle_opportunities"),
+    (["main.py", "demand"], "handle_demand", "main.handle_demand"),
+])
+def test_main_dispatch(mocker: MockerFixture, argv: list[str], expected_call: str, handler_mock: str) -> None:
+    mocker.patch.object(sys, 'argv', argv)
+    mocked_handler = mocker.patch(handler_mock)
+
+    main()
+
+    mocked_handler.assert_called_once()
+
+def test_main_no_args_prints_help(mocker: MockerFixture, capsys: CaptureFixture) -> None:
+    mocker.patch.object(sys, 'argv', ["main.py"])
+
+    main()
+    captured = capsys.readouterr()
+
+    assert "usage:" in captured.out
+    assert "Available commands" in captured.out
