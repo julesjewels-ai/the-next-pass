@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## [Current Date] - Compensation Insights
+-   **Status**: Completed.
+-   **Focus**: Implement Phase 4 Compensation Estimation.
+-   **Outcome**: Added `base_salary` and `signing_bonus` to `Job` model with validation. Implemented `get_compensation_estimate` logic in `src/core/services.py` and integrated it into the `opportunities` CLI command. Added `tests/test_compensation.py` to verify.

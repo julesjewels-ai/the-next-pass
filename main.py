@@ -7,14 +7,16 @@ skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable
+from collections.abc import Callable
+
 from src.core.models import AthleteProfile
 from src.core.services import (
-    translate_skills,
+    get_compensation_estimate,
+    get_skill_demand_report,
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    translate_skills,
 )
 
 
@@ -66,7 +68,8 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         return
 
     for job in matches:
-        print(f"- {job.title} ({job.employer})")
+        comp_str = get_compensation_estimate(job.base_salary, job.signing_bonus)
+        print(f"- {job.title} ({job.employer}) | {comp_str}")
 
     print("\nPreparation meets opportunity.")
 
@@ -178,7 +181,7 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
+    command_handlers: dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
         'employers': handle_employers,
