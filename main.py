@@ -11,7 +11,6 @@ from collections.abc import Callable
 
 from src.core.models import AthleteProfile
 from src.core.services import (
-    get_compensation_estimate,
     get_skill_demand_report,
     match_careers,
     match_employers,
@@ -68,8 +67,7 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         return
 
     for job in matches:
-        comp_str = get_compensation_estimate(job.base_salary, job.signing_bonus)
-        print(f"- {job.title} ({job.employer}) | {comp_str}")
+        print(f"- {job.title} ({job.employer})")
 
     print("\nPreparation meets opportunity.")
 

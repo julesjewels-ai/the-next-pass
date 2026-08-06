@@ -24,8 +24,6 @@ class Job(BaseModel):
     min_grit: int = Field(0, description="Minimum grit score required")
     min_teamwork: int = Field(0, description="Minimum teamwork score required")
     required_skills: list[str] = Field(default_factory=list, description="Skills required for the job")
-    base_salary: int = Field(default=0, ge=0, description="Base salary")
-    signing_bonus: int = Field(default=0, ge=0, description="Signing bonus")
 
 
 class Employer(BaseModel):

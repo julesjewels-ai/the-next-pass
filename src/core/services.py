@@ -115,25 +115,6 @@ def get_skill_demand_report() -> dict[str, int]:
     return dict(sorted(demand.items(), key=lambda item: item[1], reverse=True))
 
 
-def get_compensation_estimate(base_salary: int, signing_bonus: int) -> str:
-    """
-    Returns a formatted string representing the compensation estimate.
-
-    Args:
-        base_salary: The base salary amount.
-        signing_bonus: The signing bonus amount.
-
-    Returns:
-        A formatted string describing the compensation.
-    """
-    if base_salary == 0 and signing_bonus == 0:
-        return 'Compensation not specified'
-    elif signing_bonus == 0:
-        return f"${base_salary:,} base"
-    else:
-        return f"${base_salary:,} base + ${signing_bonus:,} sign-on"
-
-
 def match_opportunities(
     profile: AthleteProfile,
     grit_score: int,

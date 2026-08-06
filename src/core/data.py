@@ -101,38 +101,30 @@ JOBS_DB = [
     Job(
         title="Sales Development Representative",
         employer="TechCorp",
-        required_skills=[SKILL_STRATEGIC_ANALYSIS],
-        base_salary=75000,
-        signing_bonus=5000
+        required_skills=[SKILL_STRATEGIC_ANALYSIS]
     ),
     Job(
         title="Project Coordinator",
         employer="ConsultingGroup",
-        required_skills=[SKILL_TEAM_COLLABORATION],
-        base_salary=80000
+        required_skills=[SKILL_TEAM_COLLABORATION]
     ),
     Job(
         title="Operations Manager (High Intensity)",
         min_grit=HIGH_SCORE_THRESHOLD + 1,
         employer="LogisticsInc",
-        required_skills=[SKILL_OPERATIONAL_COMMAND],
-        base_salary=110000,
-        signing_bonus=15000
+        required_skills=[SKILL_OPERATIONAL_COMMAND]
     ),
     Job(
         title="Logistics Specialist",
         min_grit=HIGH_SCORE_THRESHOLD + 1,
         employer="LogisticsInc",
-        required_skills=[SKILL_STRATEGIC_EXECUTION],
-        base_salary=90000
+        required_skills=[SKILL_STRATEGIC_EXECUTION]
     ),
     Job(
         title="Customer Success Manager",
         min_teamwork=HIGH_SCORE_THRESHOLD + 1,
         employer="TechCorp",
-        required_skills=[SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP],
-        base_salary=85000,
-        signing_bonus=10000
+        required_skills=[SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP]
     ),
     Job(
         title="Human Resources Specialist",
