@@ -2,7 +2,7 @@
 Forensic unit tests for opportunity matching (skills + soft skills).
 Isolates logic by mocking databases.
 """
-from typing import List, Dict
+from typing import List, Dict, Any, Callable
 import pytest
 from pytest_mock import MockerFixture
 
@@ -56,87 +56,51 @@ def mock_employers_index(mocker: MockerFixture) -> Dict[str, Employer]:
     mocker.patch("src.core.services.EMPLOYERS_INDEX", index)
     return index
 
-def test_match_opportunities_forensic_exact_match(
+@pytest.mark.parametrize(
+    "translated_skills, empty_db, empty_index, expected_titles, assert_msg",
+    [
+        (
+            {"Analysis": "Skill1", "Integrity": "Skill2"}, False, False, ["Forensic Analyst"],
+            "Should match exact skills"
+        ),
+        (
+            {"Analysis": "Skill1"}, False, False, [],
+            "Should fail because Employer skill 'Integrity' is missing"
+        ),
+        (
+            {"Integrity": "Skill2"}, False, False, [],
+            "Should fail because Job skill 'Analysis' is missing"
+        ),
+        (
+            {"Analysis": "Skill1", "Integrity": "Skill2"}, True, False, [],
+            "Should return empty list for empty db"
+        ),
+        (
+            {"Analysis": "Skill1"}, False, True, ["Forensic Analyst"],
+            "Should still match if employer not found but job skills match"
+        ),
+    ],
+)
+def test_match_opportunities_forensic_edge_cases(
     mocker: MockerFixture,
     mock_jobs_db: List[Job],
-    mock_employers_index: Dict[str, Employer]
+    mock_employers_index: Dict[str, Employer],
+    translated_skills: Dict[str, str],
+    empty_db: bool,
+    empty_index: bool,
+    expected_titles: List[str],
+    assert_msg: str
 ) -> None:
-    """Test exact match boundary where athlete has precisely the required skills."""
-    # Mock translate_skills so we have absolute control over the returned skills
-    mocker.patch(
-        "src.core.services.translate_skills",
-        return_value={"Analysis": "Skill1", "Integrity": "Skill2"}
-    )
-    profile = AthleteProfile(sport="Test", role="Test")
+    """Test opportunity matching logic focusing on complex boundary conditions."""
+    mocker.patch("src.core.services.translate_skills", return_value=translated_skills)
 
+    if empty_db:
+        mocker.patch("src.core.services.JOBS_DB", [])
+    if empty_index:
+        mocker.patch("src.core.services.EMPLOYERS_INDEX", {})
+
+    profile = AthleteProfile(sport="Test", role="Test")
     matches = match_opportunities(profile, grit_score=5, teamwork_score=5)
     titles = [job.title for job in matches]
 
-    assert "Forensic Analyst" in titles, "Should match exact skills"
-    assert len(titles) == 1, "Should only match the one job"
-
-def test_match_opportunities_forensic_missing_employer_skill(
-    mocker: MockerFixture,
-    mock_jobs_db: List[Job],
-    mock_employers_index: Dict[str, Employer]
-) -> None:
-    """Test failure when athlete has job skills but missing employer skills."""
-    mocker.patch(
-        "src.core.services.translate_skills",
-        return_value={"Analysis": "Skill1"} # Missing Integrity
-    )
-    profile = AthleteProfile(sport="Test", role="Test")
-
-    matches = match_opportunities(profile, grit_score=5, teamwork_score=5)
-
-    assert len(matches) == 0, "Should fail because Employer skill 'Integrity' is missing"
-
-def test_match_opportunities_forensic_missing_job_skill(
-    mocker: MockerFixture,
-    mock_jobs_db: List[Job],
-    mock_employers_index: Dict[str, Employer]
-) -> None:
-    """Test failure when athlete has employer skills but missing job skills."""
-    mocker.patch(
-        "src.core.services.translate_skills",
-        return_value={"Integrity": "Skill2"} # Missing Analysis
-    )
-    profile = AthleteProfile(sport="Test", role="Test")
-
-    matches = match_opportunities(profile, grit_score=5, teamwork_score=5)
-
-    assert len(matches) == 0, "Should fail because Job skill 'Analysis' is missing"
-
-def test_match_opportunities_forensic_empty_db(
-    mocker: MockerFixture,
-    mock_employers_index: Dict[str, Employer]
-) -> None:
-    """Test edge case with empty jobs database."""
-    mocker.patch("src.core.services.JOBS_DB", [])
-    mocker.patch(
-        "src.core.services.translate_skills",
-        return_value={"Analysis": "Skill1", "Integrity": "Skill2"}
-    )
-    profile = AthleteProfile(sport="Test", role="Test")
-
-    matches = match_opportunities(profile, grit_score=5, teamwork_score=5)
-
-    assert len(matches) == 0, "Should return empty list for empty db"
-
-def test_match_opportunities_forensic_employer_not_found(
-    mocker: MockerFixture,
-    mock_jobs_db: List[Job]
-) -> None:
-    """Test resilience when job's employer is not in EMPLOYERS_INDEX."""
-    # Ensure index is empty
-    mocker.patch("src.core.services.EMPLOYERS_INDEX", {})
-    mocker.patch(
-        "src.core.services.translate_skills",
-        return_value={"Analysis": "Skill1"}
-    )
-    profile = AthleteProfile(sport="Test", role="Test")
-
-    matches = match_opportunities(profile, grit_score=5, teamwork_score=5)
-    titles = [job.title for job in matches]
-
-    assert "Forensic Analyst" in titles, "Should still match if employer not found but job skills match"
+    assert titles == expected_titles, assert_msg
