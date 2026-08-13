@@ -150,3 +150,29 @@ def match_opportunities(
                 matches.append(job)
 
     return matches
+
+
+def get_skill_gap_analysis(profile: AthleteProfile) -> Dict[str, int]:
+    """
+    Compares an athlete's translated skills against the overall market demand
+    to identify missing skills, sorted by their frequency of demand.
+
+    Args:
+        profile: The athlete's profile (DTO).
+
+    Returns:
+        Dictionary mapping missing skill names to their demand count,
+        sorted descending by demand.
+    """
+    athlete_skills = translate_skills(profile)
+    skill_names = set(athlete_skills.keys())
+
+    market_demand = get_skill_demand_report()
+
+    gap_analysis: Dict[str, int] = {
+        skill: count
+        for skill, count in market_demand.items()
+        if skill not in skill_names
+    }
+
+    return dict(sorted(gap_analysis.items(), key=lambda item: item[1], reverse=True))

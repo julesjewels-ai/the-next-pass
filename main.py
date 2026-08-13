@@ -14,7 +14,8 @@ from src.core.services import (
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    get_skill_demand_report,
+    get_skill_gap_analysis
 )
 
 
@@ -83,6 +84,24 @@ def handle_demand(args: argparse.Namespace) -> None:
         print(f"- {skill}: Required by {count} role(s)")
 
     print("\nTrain for what the market demands.")
+
+
+def handle_gap(args: argparse.Namespace) -> None:
+    """Handles the 'gap' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    print(f"\n--- Skill Gap Analysis for {args.sport} {args.role} ---")
+
+    gaps = get_skill_gap_analysis(profile)
+
+    if not gaps:
+        print("You possess all currently demanded skills. Stay sharp.")
+        return
+
+    print("Missing Skills (Ranked by Market Demand):")
+    for skill, count in gaps.items():
+        print(f"- {skill} (Demanded by {count} role(s))")
+
+    print("\nIdentify the gap. Bridge it.")
 
 
 def main() -> None:
@@ -176,6 +195,24 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: gap
+    gap_parser = subparsers.add_parser(
+        'gap',
+        help='Identify skills you are missing based on market demand'
+    )
+    gap_parser.add_argument(
+        '--sport',
+        type=str,
+        required=True,
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    gap_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
+    )
+
     args = parser.parse_args()
 
     command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
@@ -184,6 +221,7 @@ def main() -> None:
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'gap': handle_gap,
     }
 
     if args.command in command_handlers:

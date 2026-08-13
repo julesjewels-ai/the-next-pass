@@ -1,8 +1,10 @@
 """
 Unit tests for the Analytics and Reporting features.
 """
-from src.core.services import get_skill_demand_report
-from src.core.data import SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP
+import pytest
+from src.core.models import AthleteProfile
+from src.core.services import get_skill_demand_report, get_skill_gap_analysis
+from src.core.data import SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP, KEY_BASKETBALL
 
 def test_get_skill_demand_report():
     """
@@ -29,3 +31,23 @@ def test_get_skill_demand_report_empty_db(mocker):
     mocker.patch('src.core.services.JOBS_DB', [])
     demand = get_skill_demand_report()
     assert demand == {}, "Should return an empty dict when there are no jobs"
+
+
+@pytest.mark.parametrize("sport, role, expected_gaps, missing_skill", [
+    (KEY_BASKETBALL, "Player", True, "Strategic Execution"),
+    ("Unknown Sport", "Unknown Role", True, "Team Collaboration"),
+])
+def test_get_skill_gap_analysis(sport, role, expected_gaps, missing_skill):
+    """
+    Test that get_skill_gap_analysis correctly identifies missing skills.
+    """
+    profile = AthleteProfile(sport=sport, role=role)
+    gaps = get_skill_gap_analysis(profile)
+
+    assert isinstance(gaps, dict)
+    if expected_gaps:
+        assert missing_skill in gaps, f"Expected missing skill {missing_skill} to be in gaps"
+
+        # Verify that it's sorted descending
+        counts = list(gaps.values())
+        assert counts == sorted(counts, reverse=True)
