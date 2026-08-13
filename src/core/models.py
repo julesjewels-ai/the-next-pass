@@ -7,8 +7,8 @@ from pydantic import BaseModel, Field
 
 class AthleteProfile(BaseModel):
     """Represents a student-athlete's basic background."""
-    sport: str = Field(..., description="The sport played by the athlete")
-    role: str = Field(..., description="The role or position within the team")
+    sport: str = Field(..., min_length=1, description="The sport played by the athlete")
+    role: str = Field(..., min_length=1, description="The role or position within the team")
 
 
 class Skill(BaseModel):
