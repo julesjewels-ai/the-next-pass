@@ -4,7 +4,7 @@ Unit tests for the Analytics and Reporting features.
 import pytest
 from src.core.models import AthleteProfile
 from src.core.services import get_skill_demand_report, get_skill_gap_analysis
-from src.core.data import SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP, KEY_BASKETBALL
+from src.core.data import SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP
 
 def test_get_skill_demand_report():
     """
@@ -33,21 +33,43 @@ def test_get_skill_demand_report_empty_db(mocker):
     assert demand == {}, "Should return an empty dict when there are no jobs"
 
 
-@pytest.mark.parametrize("sport, role, expected_gaps, missing_skill", [
-    (KEY_BASKETBALL, "Player", True, "Strategic Execution"),
-    ("Unknown Sport", "Unknown Role", True, "Team Collaboration"),
+@pytest.mark.parametrize("mock_market_demand, mock_athlete_skills, expected_gaps", [
+    (
+        {"Strategic Execution": 5, "Team Collaboration": 3},
+        {"Team Collaboration": "Description"},
+        {"Strategic Execution": 5}
+    ),
+    (
+        {"Strategic Execution": 5, "Team Collaboration": 3},
+        {"Strategic Execution": "Description", "Team Collaboration": "Description"},
+        {}
+    ),
+    (
+        {},
+        {"Team Collaboration": "Description"},
+        {}
+    )
 ])
-def test_get_skill_gap_analysis(sport, role, expected_gaps, missing_skill):
+def test_get_skill_gap_analysis(
+    mocker,
+    mock_market_demand,
+    mock_athlete_skills,
+    expected_gaps
+):
     """
-    Test that get_skill_gap_analysis correctly identifies missing skills.
+    Test that get_skill_gap_analysis correctly identifies missing skills
+    by mocking dependencies.
     """
-    profile = AthleteProfile(sport=sport, role=role)
+    mocker.patch(
+        'src.core.services.get_skill_demand_report',
+        return_value=mock_market_demand
+    )
+    mocker.patch(
+        'src.core.services.translate_skills',
+        return_value=mock_athlete_skills
+    )
+
+    profile = AthleteProfile(sport="Any", role="Any")
     gaps = get_skill_gap_analysis(profile)
 
-    assert isinstance(gaps, dict)
-    if expected_gaps:
-        assert missing_skill in gaps, f"Expected missing skill {missing_skill} to be in gaps"
-
-        # Verify that it's sorted descending
-        counts = list(gaps.values())
-        assert counts == sorted(counts, reverse=True)
+    assert gaps == expected_gaps
