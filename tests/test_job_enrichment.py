@@ -1,8 +1,8 @@
 """
 Unit tests for job enrichment.
 """
-from src.core.services import match_careers
 from src.core.data import HIGH_SCORE_THRESHOLD
+from src.core.services import match_careers
 
 
 def test_match_careers_returns_rich_data():

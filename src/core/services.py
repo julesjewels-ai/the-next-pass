@@ -2,22 +2,24 @@
 Service layer for The 98% Platform.
 Handles business logic for skill translation and career matching.
 """
-from typing import List, Dict
+from typing import Annotated
 
-from src.core.models import AthleteProfile, Job, Employer
+from pydantic import Field, validate_call
+
 from src.core.data import (
-    SKILL_DB,
-    UNIVERSAL_SKILLS,
-    ROLE_SKILL_MAPPINGS,
-    SPORT_SKILL_MAPPINGS,
     COMPOSITE_SKILL_MAPPINGS,
+    EMPLOYERS_INDEX,
     JOBS_DB,
+    ROLE_SKILL_MAPPINGS,
     SAMPLE_EMPLOYERS,
-    EMPLOYERS_INDEX
+    SKILL_DB,
+    SPORT_SKILL_MAPPINGS,
+    UNIVERSAL_SKILLS,
 )
+from src.core.models import AthleteProfile, Employer, Job
 
 
-def _resolve_skills(mapping: Dict[str, tuple[str, str]], source: str) -> Dict[str, str]:
+def _resolve_skills(mapping: dict[str, tuple[str, str]], source: str) -> dict[str, str]:
     """Helper to extract skills from mappings based on substring containment."""
     return {
         skill_name: SKILL_DB[db_key]
@@ -27,9 +29,9 @@ def _resolve_skills(mapping: Dict[str, tuple[str, str]], source: str) -> Dict[st
 
 
 def _resolve_composite_skills(
-    mapping: Dict[tuple[str, str], tuple[str, str]],
+    mapping: dict[tuple[str, str], tuple[str, str]],
     profile: AthleteProfile
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """Helper to extract skills from composite mappings (Sport + Role)."""
     return {
         skill_name: SKILL_DB[db_key]
@@ -38,7 +40,7 @@ def _resolve_composite_skills(
     }
 
 
-def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
+def translate_skills(profile: AthleteProfile) -> dict[str, str]:
     """
     Translates raw athletic experiences into resume-ready bullet points.
 
@@ -56,7 +58,7 @@ def translate_skills(profile: AthleteProfile) -> Dict[str, str]:
     }
 
 
-def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
+def match_careers(grit_score: int, teamwork_score: int) -> list[Job]:
     """
     Suggests careers based on soft-skill scoring.
 
@@ -73,7 +75,7 @@ def match_careers(grit_score: int, teamwork_score: int) -> List[Job]:
     ]
 
 
-def match_employers(profile: AthleteProfile) -> List[Employer]:
+def match_employers(profile: AthleteProfile) -> list[Employer]:
     """
     Finds employers whose required skills match the athlete's translated skills.
 
@@ -93,7 +95,7 @@ def match_employers(profile: AthleteProfile) -> List[Employer]:
     ]
 
 
-def get_skill_demand_report() -> Dict[str, int]:
+def get_skill_demand_report() -> dict[str, int]:
     """
     Aggregates the frequency of required skills across all jobs and employers
     to help athletes understand market demand.
@@ -102,7 +104,7 @@ def get_skill_demand_report() -> Dict[str, int]:
         Dictionary mapping the corporate skill name to the number of
         jobs/employers that require it, sorted by demand (descending).
     """
-    demand: Dict[str, int] = {}
+    demand: dict[str, int] = {}
     for job in JOBS_DB:
         job_skills = set(job.required_skills)
         employer = EMPLOYERS_INDEX.get(job.employer)
@@ -120,7 +122,7 @@ def match_opportunities(
     profile: AthleteProfile,
     grit_score: int,
     teamwork_score: int
-) -> List[Job]:
+) -> list[Job]:
     """
     Finds jobs that match both hard skills (resume bullets) and soft skills (grit/teamwork).
 
@@ -150,3 +152,25 @@ def match_opportunities(
                 matches.append(job)
 
     return matches
+
+
+@validate_call
+def get_compensation_estimate(
+    base_salary: Annotated[int, Field(ge=0)],
+    signing_bonus: Annotated[int, Field(ge=0)]
+) -> str:
+    """
+    Returns a formatted string representing the compensation structure.
+
+    Args:
+        base_salary: Base salary component.
+        signing_bonus: Sign-on bonus component.
+
+    Returns:
+        Formatted string compensation.
+    """
+    if base_salary == 0 and signing_bonus == 0:
+        return 'Compensation not specified'
+    if signing_bonus == 0:
+        return f'${base_salary:,} base'
+    return f'${base_salary:,} base + ${signing_bonus:,} sign-on'
