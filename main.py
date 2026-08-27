@@ -14,7 +14,8 @@ from src.core.services import (
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    get_skill_demand_report,
+    generate_career_plan
 )
 
 
@@ -69,6 +70,31 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         print(f"- {job.title} ({job.employer})")
 
     print("\nPreparation meets opportunity.")
+
+
+def handle_plan(args: argparse.Namespace) -> None:
+    """Handles the 'plan' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    plan = generate_career_plan(profile, args.grit, args.teamwork)
+
+    print(f"\n--- Career Plan for {args.sport} {args.role} ---")
+    print("\n# Translated Skills")
+    for raw, corpo in plan.translated_skills.items():
+        print(f"- {raw}: {corpo}")
+
+    print("\n# Matching Employers")
+    if not plan.matching_employers:
+        print("No direct employer matches found.")
+    for emp in plan.matching_employers:
+        print(f"- {emp.name} ({emp.industry})")
+
+    print("\n# Matching Opportunities")
+    if not plan.matching_opportunities:
+        print("No direct opportunity matches found.")
+    for job in plan.matching_opportunities:
+        print(f"- {job.title} ({job.employer})")
+
+    print("\nThe playbook is set. Time to execute.")
 
 
 def handle_demand(args: argparse.Namespace) -> None:
@@ -170,6 +196,24 @@ def main() -> None:
         '--teamwork', type=int, default=9, help='Teamwork level (1-10)'
     )
 
+    # Command: plan
+    plan_parser = subparsers.add_parser(
+        'plan',
+        help='Generate a comprehensive personalized career plan'
+    )
+    plan_parser.add_argument(
+        '--sport', type=str, required=True, help='Sport played'
+    )
+    plan_parser.add_argument(
+        '--role', type=str, default='Player', help='Role within the team'
+    )
+    plan_parser.add_argument(
+        '--grit', type=int, default=8, help='Grit level (1-10)'
+    )
+    plan_parser.add_argument(
+        '--teamwork', type=int, default=9, help='Teamwork level (1-10)'
+    )
+
     # Command: demand
     subparsers.add_parser(
         'demand',
@@ -184,6 +228,7 @@ def main() -> None:
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'plan': handle_plan,
     }
 
     if args.command in command_handlers:

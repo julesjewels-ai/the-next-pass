@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## 2026-08-27 - Personalized Career Plans (Phase 4)
+-   **Status**: Completed.
+-   **Focus**: Implement unified career plan generation.
+-   **Outcome**: Added `CareerPlan` DTO in `src/core/models.py`. Created `generate_career_plan` service. Added `plan` CLI command. Verified with Validation Gates.

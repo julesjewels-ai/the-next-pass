@@ -4,7 +4,7 @@ Handles business logic for skill translation and career matching.
 """
 from typing import List, Dict
 
-from src.core.models import AthleteProfile, Job, Employer
+from src.core.models import AthleteProfile, Job, Employer, CareerPlan
 from src.core.data import (
     SKILL_DB,
     UNIVERSAL_SKILLS,
@@ -114,6 +114,23 @@ def get_skill_demand_report() -> Dict[str, int]:
 
     # Sort descending by demand
     return dict(sorted(demand.items(), key=lambda item: item[1], reverse=True))
+
+
+def generate_career_plan(
+    profile: AthleteProfile,
+    grit_score: int,
+    teamwork_score: int
+) -> CareerPlan:
+    """
+    Generates a personalized career plan by aggregating translated skills,
+    matching employers, and matching job opportunities.
+    """
+    return CareerPlan(
+        profile=profile,
+        translated_skills=translate_skills(profile),
+        matching_employers=match_employers(profile),
+        matching_opportunities=match_opportunities(profile, grit_score, teamwork_score)
+    )
 
 
 def match_opportunities(

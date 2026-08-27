@@ -20,7 +20,10 @@
     -   [x] **CLI Integration**: Expose `opportunities` command.
 
 5.  **Analytics and Reporting (Phase 3)**
-    -   [ ] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand. (In Progress)
+    -   [x] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand. (Completed)
+
+6.  **Personalized Career Plans (Phase 4)**
+    -   [ ] **Generate Career Plan**: Create a service that aggregates translated skills, employer matches, and job opportunities into a unified `CareerPlan` DTO.
 
 ## Current Gap Analysis
--   Phase 2 is complete. Moving on to Phase 3: Analytics and Reporting. The current highest priority task is to implement "Skill Demand Analytics".
+-   Phase 3 is complete. Moving on to Phase 4: Personalized Career Plans. The current highest priority task is to implement "Generate Career Plan".
