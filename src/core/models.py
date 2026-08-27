@@ -1,7 +1,7 @@
 """
 Domain models for The 98% Platform.
 """
-from typing import List
+from typing import List, Dict
 from pydantic import BaseModel, Field
 
 
@@ -31,3 +31,11 @@ class Employer(BaseModel):
     name: str = Field(..., description="The company name")
     industry: str = Field(..., description="The industry sector")
     required_skills: List[str] = Field(..., description="List of required skills")
+
+
+class CareerPlan(BaseModel):
+    """Represents a unified personalized career plan."""
+    profile: AthleteProfile = Field(..., description="The athlete's profile")
+    translated_skills: Dict[str, str] = Field(..., description="Translated resume bullets")
+    matching_employers: List[Employer] = Field(..., description="List of matching employers")
+    matching_opportunities: List[Job] = Field(..., description="List of matching job opportunities")
