@@ -2,8 +2,10 @@
 Unit tests for core application logic.
 """
 
+import pytest
+
 from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers
+from src.core.services import get_compensation_estimate, match_careers, translate_skills
 
 
 def test_skill_translation_captain():
@@ -73,3 +75,16 @@ def test_skill_translation_composite_football_captain():
 
     assert "Operational Command" in result
     assert "large-scale team maneuvers" in result["Operational Command"]
+
+
+@pytest.mark.parametrize(
+    "base_salary, signing_bonus, expected",
+    [
+        (100000, 10000, "$100,000 base + $10,000 sign-on"),
+        (85000, 0, "$85,000 base"),
+        (0, 0, "Compensation not specified"),
+    ]
+)
+def test_get_compensation_estimate(base_salary: int, signing_bonus: int, expected: str) -> None:
+    """Test get_compensation_estimate formats values correctly."""
+    assert get_compensation_estimate(base_salary, signing_bonus) == expected
