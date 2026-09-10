@@ -2,14 +2,15 @@
 Tests for the main CLI application logic.
 """
 import argparse
-from typing import List
 from unittest.mock import Mock
 
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
-from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+
+from main import handle_demand, handle_employers, handle_gap, handle_opportunities
+from src.core.models import AthleteProfile, Employer, Job
+
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -36,8 +37,8 @@ def mock_match_employers(mocker: MockerFixture) -> Mock:
 def test_handle_employers(
     mock_match_employers: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Employer],
-    expected_substrings: List[str]
+    mock_return_value: list[Employer],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_employers with various match scenarios."""
     # Arrange
@@ -78,8 +79,8 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 def test_handle_opportunities(
     mock_match_opportunities: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Job],
-    expected_substrings: List[str]
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_opportunities with various match scenarios."""
     # Arrange
@@ -137,3 +138,36 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.fixture
+def mock_get_skill_gap_analysis(mocker: MockerFixture) -> Mock:
+    """Mock the get_skill_gap_analysis service."""
+    return mocker.patch("main.get_skill_gap_analysis")
+
+def test_handle_gap_with_missing_skills(mock_get_skill_gap_analysis: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_gap when there are missing skills."""
+    mock_get_skill_gap_analysis.return_value = ["Leadership", "Teamwork"]
+    args = argparse.Namespace(sport="Football", role="Player")
+
+    handle_gap(args)
+    captured = capsys.readouterr()
+
+    assert "--- Skill Gap Analysis for Football Player ---" in captured.out
+    assert "Top skills to develop based on market demand:" in captured.out
+    assert "- Leadership" in captured.out
+    assert "- Teamwork" in captured.out
+    assert "Identify the gap. Bridge it." in captured.out
+    mock_get_skill_gap_analysis.assert_called_once()
+
+def test_handle_gap_no_missing_skills(mock_get_skill_gap_analysis: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_gap when the athlete has all demanded skills."""
+    mock_get_skill_gap_analysis.return_value = []
+    args = argparse.Namespace(sport="Football", role="Captain")
+
+    handle_gap(args)
+    captured = capsys.readouterr()
+
+    assert "--- Skill Gap Analysis for Football Captain ---" in captured.out
+    assert "You possess all currently demanded skills. Ready to deploy." in captured.out
+    mock_get_skill_gap_analysis.assert_called_once()

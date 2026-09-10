@@ -7,14 +7,16 @@ skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable
+from collections.abc import Callable
+
 from src.core.models import AthleteProfile
 from src.core.services import (
-    translate_skills,
+    get_skill_demand_report,
+    get_skill_gap_analysis,
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    translate_skills,
 )
 
 
@@ -83,6 +85,24 @@ def handle_demand(args: argparse.Namespace) -> None:
         print(f"- {skill}: Required by {count} role(s)")
 
     print("\nTrain for what the market demands.")
+
+
+def handle_gap(args: argparse.Namespace) -> None:
+    """Handles the 'gap' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    print(f"\n--- Skill Gap Analysis for {args.sport} {args.role} ---")
+
+    missing_skills = get_skill_gap_analysis(profile)
+
+    if not missing_skills:
+        print("You possess all currently demanded skills. Ready to deploy.")
+        return
+
+    print("Top skills to develop based on market demand:")
+    for skill in missing_skills:
+        print(f"- {skill}")
+
+    print("\nIdentify the gap. Bridge it.")
 
 
 def main() -> None:
@@ -176,14 +196,33 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: gap
+    gap_parser = subparsers.add_parser(
+        'gap',
+        help='Identify the top skills you are missing based on market demand'
+    )
+    gap_parser.add_argument(
+        '--sport',
+        type=str,
+        required=True,
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    gap_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
+    )
+
     args = parser.parse_args()
 
-    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
+    command_handlers: dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'gap': handle_gap,
     }
 
     if args.command in command_handlers:
