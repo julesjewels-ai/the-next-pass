@@ -3,7 +3,7 @@ Unit tests for core application logic.
 """
 
 from src.core.models import AthleteProfile
-from src.core.services import translate_skills, match_careers
+from src.core.services import match_careers, translate_skills
 
 
 def test_skill_translation_captain():
