@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## [Current Date] - Trait Demand Analytics (Phase 3)
+-   **Status**: Completed.
+-   **Focus**: Implement Trait Demand Analytics.
+-   **Outcome**: Added `get_trait_demand_report` in `src/core/services.py` to calculate the average minimum grit and teamwork scores required across all jobs. Followed SOLID principles. SCP Risk: Input Validation (Score: 1 - static DB, no risk). Added `trait-demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`.
