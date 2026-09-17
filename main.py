@@ -7,14 +7,16 @@ skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable
+from collections.abc import Callable
+
 from src.core.models import AthleteProfile
 from src.core.services import (
-    translate_skills,
+    get_skill_demand_report,
+    get_trait_demand_report,
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    translate_skills,
 )
 
 
@@ -69,6 +71,20 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         print(f"- {job.title} ({job.employer})")
 
     print("\nPreparation meets opportunity.")
+
+
+def handle_trait_demand(args: argparse.Namespace) -> None:
+    """Handles the 'trait-demand' command."""
+    print("\n--- Trait Demand Analytics ---")
+    demand = get_trait_demand_report()
+
+    if demand['grit'] == 0.0 and demand['teamwork'] == 0.0:
+        print("No job data available to calculate trait demand.")
+        return
+
+    print(f"Average Minimum Grit Required: {demand['grit']:.1f}")
+    print(f"Average Minimum Teamwork Required: {demand['teamwork']:.1f}")
+    print("\nBenchmark your traits against the market.")
 
 
 def handle_demand(args: argparse.Namespace) -> None:
@@ -176,14 +192,21 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: trait-demand
+    subparsers.add_parser(
+        'trait-demand',
+        help='View market demand for soft skill traits (grit, teamwork)'
+    )
+
     args = parser.parse_args()
 
-    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
+    command_handlers: dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'trait-demand': handle_trait_demand,
     }
 
     if args.command in command_handlers:
