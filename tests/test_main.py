@@ -2,14 +2,15 @@
 Tests for the main CLI application logic.
 """
 import argparse
-from typing import List
 from unittest.mock import Mock
 
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
-from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+
+from main import handle_demand, handle_employers, handle_opportunities, handle_plan
+from src.core.models import AthleteProfile, Employer, Job
+
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -36,8 +37,8 @@ def mock_match_employers(mocker: MockerFixture) -> Mock:
 def test_handle_employers(
     mock_match_employers: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Employer],
-    expected_substrings: List[str]
+    mock_return_value: list[Employer],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_employers with various match scenarios."""
     # Arrange
@@ -78,8 +79,8 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 def test_handle_opportunities(
     mock_match_opportunities: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Job],
-    expected_substrings: List[str]
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_opportunities with various match scenarios."""
     # Arrange
@@ -137,3 +138,57 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.fixture
+def mock_get_skill_gaps(mocker: MockerFixture) -> Mock:
+    """Mock the get_skill_gaps service."""
+    return mocker.patch("main.get_skill_gaps")
+
+@pytest.mark.parametrize("mock_return_value, mock_side_effect, expected_substrings", [
+    (
+        ["Leadership", "Coding"],
+        None,
+        ["Missing Skills to Develop:", "- Leadership", "- Coding"]
+    ),
+    (
+        [],
+        None,
+        ["You have all the required skills for this role. Ready to execute."]
+    ),
+    (
+        None,
+        ValueError("Job with title 'Fake Job' not found."),
+        ["Error: Job with title 'Fake Job' not found."]
+    )
+])
+def test_handle_plan(
+    mock_get_skill_gaps: Mock,
+    capsys: CaptureFixture,
+    mock_return_value: list[str] | None,
+    mock_side_effect: Exception | None,
+    expected_substrings: list[str]
+) -> None:
+    """Test handle_plan with various gap scenarios."""
+    args = argparse.Namespace(sport="Football", role="Captain", job="Software Engineer")
+
+    if mock_side_effect:
+        mock_get_skill_gaps.side_effect = mock_side_effect
+    else:
+        mock_get_skill_gaps.return_value = mock_return_value
+
+    handle_plan(args)
+    captured = capsys.readouterr()
+
+    if not mock_side_effect:
+        assert "--- Skill Gap Analysis for Football Captain ---" in captured.out
+        assert "Target Job: Software Engineer" in captured.out
+
+    for substring in expected_substrings:
+        assert substring in captured.out
+
+    mock_get_skill_gaps.assert_called_once()
+    call_args = mock_get_skill_gaps.call_args[0]
+    assert isinstance(call_args[0], AthleteProfile)
+    assert call_args[0].sport == "Football"
+    assert call_args[1] == "Software Engineer"
