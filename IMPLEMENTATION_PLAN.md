@@ -14,13 +14,16 @@
     -   [x] Add "Employer" entity.
     -   [x] Implement matching based on specific requirements.
 
-4.  **Intelligent Job Matching (Phase 2)**
+4.  **Intelligent Job Matching (Phase 2) (Completed)**
     -   [x] **Enhance Job Model**: Add metadata (employer, skills, traits) to `Job` entity.
     -   [x] **Unified Matching Service**: Create `match_opportunities` to filter jobs by skills & traits.
     -   [x] **CLI Integration**: Expose `opportunities` command.
 
-5.  **Analytics and Reporting (Phase 3)**
-    -   [ ] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand. (In Progress)
+5.  **Analytics and Reporting (Phase 3) (Completed)**
+    -   [x] **Skill Demand Analytics**: Build a service to aggregate the frequency of required skills across all jobs to help athletes understand market demand.
+
+6.  **Personalized Career Plans (Phase 4)**
+    -   [ ] **Skill Gap Analysis**: Build a service to identify the specific skills an athlete is missing for a target job. (In Progress)
 
 ## Current Gap Analysis
--   Phase 2 is complete. Moving on to Phase 3: Analytics and Reporting. The current highest priority task is to implement "Skill Demand Analytics".
+-   Phase 3 is complete. Moving on to Phase 4: Personalized Career Plans. The current highest priority task is to implement "Skill Gap Analysis".

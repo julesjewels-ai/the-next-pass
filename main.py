@@ -7,14 +7,16 @@ skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable
+from collections.abc import Callable
+
 from src.core.models import AthleteProfile
 from src.core.services import (
-    translate_skills,
+    get_skill_demand_report,
+    get_skill_gaps,
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    translate_skills,
 )
 
 
@@ -69,6 +71,25 @@ def handle_opportunities(args: argparse.Namespace) -> None:
         print(f"- {job.title} ({job.employer})")
 
     print("\nPreparation meets opportunity.")
+
+
+def handle_plan(args: argparse.Namespace) -> None:
+    """Handles the 'plan' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    print(f"\n--- Skill Gap Analysis for {args.sport} {args.role} ---")
+    print(f"Target Job: {args.job}\n")
+
+    try:
+        missing_skills = get_skill_gaps(profile, args.job)
+        if not missing_skills:
+            print("You have all the required skills for this role. Ready to execute.")
+        else:
+            print("Missing Skills to Develop:")
+            for skill in missing_skills:
+                print(f"- {skill}")
+            print("\nIdentify the gap. Build the bridge.")
+    except ValueError as e:
+        print(f"Error: {e}")
 
 
 def handle_demand(args: argparse.Namespace) -> None:
@@ -176,14 +197,39 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: plan
+    plan_parser = subparsers.add_parser(
+        'plan',
+        help='Analyze skill gaps for a target career path'
+    )
+    plan_parser.add_argument(
+        '--sport',
+        type=str,
+        required=True,
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    plan_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
+    )
+    plan_parser.add_argument(
+        '--job',
+        type=str,
+        required=True,
+        help='Target job title to analyze against'
+    )
+
     args = parser.parse_args()
 
-    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
+    command_handlers: dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'plan': handle_plan,
     }
 
     if args.command in command_handlers:
