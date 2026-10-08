@@ -2,9 +2,11 @@
 Unit tests for opportunity matching (skills + soft skills).
 """
 import pytest
+
+from src.core.data import HIGH_SCORE_THRESHOLD
 from src.core.models import AthleteProfile
 from src.core.services import match_opportunities
-from src.core.data import HIGH_SCORE_THRESHOLD
+
 
 @pytest.fixture
 def high_scores():
