@@ -7,14 +7,16 @@ skills into corporate value.
 """
 
 import argparse
-from typing import Dict, Callable
+from collections.abc import Callable
+
 from src.core.models import AthleteProfile
 from src.core.services import (
-    translate_skills,
+    generate_career_plan,
+    get_skill_demand_report,
     match_careers,
     match_employers,
     match_opportunities,
-    get_skill_demand_report
+    translate_skills,
 )
 
 
@@ -83,6 +85,37 @@ def handle_demand(args: argparse.Namespace) -> None:
         print(f"- {skill}: Required by {count} role(s)")
 
     print("\nTrain for what the market demands.")
+
+
+def handle_plan(args: argparse.Namespace) -> None:
+    """Handles the 'plan' command."""
+    profile = AthleteProfile(sport=args.sport, role=args.role)
+    print(f"\n--- Career Plan: {args.target_job} ---")
+
+    try:
+        plan = generate_career_plan(profile, args.grit, args.teamwork, args.target_job)
+    except ValueError as e:
+        print(f"Error: {e!s}")
+        print("Please check the available jobs using the 'match' command.")
+        return
+
+    print(f"Match Percentage: {plan.match_percentage}%")
+
+    print("\nCurrent Applicable Skills:")
+    if plan.current_skills:
+        for skill in plan.current_skills:
+            print(f"- {skill}")
+    else:
+        print("- None matched")
+
+    print("\nSkills to Develop (Skill Gap):")
+    if plan.missing_skills:
+        for skill in plan.missing_skills:
+            print(f"- {skill}")
+    else:
+        print("- You meet all skill requirements!")
+
+    print("\nClose the gap. Execute the plan.")
 
 
 def main() -> None:
@@ -176,14 +209,45 @@ def main() -> None:
         help='View market demand for specific skills'
     )
 
+    # Command: plan
+    plan_parser = subparsers.add_parser(
+        'plan',
+        help='Generate a career plan and identify skill gaps for a target job'
+    )
+    plan_parser.add_argument(
+        '--sport',
+        type=str,
+        required=True,
+        help='Sport played (e.g., Football, Swimming)'
+    )
+    plan_parser.add_argument(
+        '--role',
+        type=str,
+        default='Player',
+        help='Role within the team (e.g., Captain, Starter)'
+    )
+    plan_parser.add_argument(
+        '--target-job',
+        type=str,
+        required=True,
+        help='The title of the target job'
+    )
+    plan_parser.add_argument(
+        '--grit', type=int, default=8, help='Grit level (1-10)'
+    )
+    plan_parser.add_argument(
+        '--teamwork', type=int, default=9, help='Teamwork level (1-10)'
+    )
+
     args = parser.parse_args()
 
-    command_handlers: Dict[str, Callable[[argparse.Namespace], None]] = {
+    command_handlers: dict[str, Callable[[argparse.Namespace], None]] = {
         'translate': handle_translate,
         'match': handle_match,
         'employers': handle_employers,
         'opportunities': handle_opportunities,
         'demand': handle_demand,
+        'plan': handle_plan,
     }
 
     if args.command in command_handlers:

@@ -2,14 +2,15 @@
 Tests for the main CLI application logic.
 """
 import argparse
-from typing import List
 from unittest.mock import Mock
 
 import pytest
 from pytest import CaptureFixture
 from pytest_mock import MockerFixture
-from src.core.models import Employer, AthleteProfile, Job
-from main import handle_employers, handle_opportunities, handle_demand
+
+from main import handle_demand, handle_employers, handle_opportunities, handle_plan
+from src.core.models import AthleteProfile, CareerPlan, Employer, Job
+
 
 @pytest.fixture
 def mock_match_employers(mocker: MockerFixture) -> Mock:
@@ -36,8 +37,8 @@ def mock_match_employers(mocker: MockerFixture) -> Mock:
 def test_handle_employers(
     mock_match_employers: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Employer],
-    expected_substrings: List[str]
+    mock_return_value: list[Employer],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_employers with various match scenarios."""
     # Arrange
@@ -78,8 +79,8 @@ def mock_match_opportunities(mocker: MockerFixture) -> Mock:
 def test_handle_opportunities(
     mock_match_opportunities: Mock,
     capsys: CaptureFixture,
-    mock_return_value: List[Job],
-    expected_substrings: List[str]
+    mock_return_value: list[Job],
+    expected_substrings: list[str]
 ) -> None:
     """Test handle_opportunities with various match scenarios."""
     # Arrange
@@ -137,3 +138,41 @@ def test_handle_demand_empty_data(mock_get_skill_demand_report: Mock, capsys: Ca
 
     assert "No job data available to calculate demand." in captured.out
     mock_get_skill_demand_report.assert_called_once()
+
+
+@pytest.fixture
+def mock_generate_career_plan(mocker: MockerFixture) -> Mock:
+    """Mock the generate_career_plan service."""
+    return mocker.patch("main.generate_career_plan")
+
+def test_handle_plan_success(mock_generate_career_plan: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_plan on a successful match."""
+    plan_mock = CareerPlan(
+        target_job=Job(title="Project Coordinator", required_skills=["Team Collaboration"]),
+        current_skills=["Team Collaboration"],
+        missing_skills=["Strategic Execution"],
+        match_percentage=75.0
+    )
+    mock_generate_career_plan.return_value = plan_mock
+    args = argparse.Namespace(sport="Basketball", role="Player", grit=8, teamwork=9, target_job="Project Coordinator")
+
+    handle_plan(args)
+    captured = capsys.readouterr()
+
+    assert "Career Plan: Project Coordinator" in captured.out
+    assert "Match Percentage: 75.0%" in captured.out
+    assert "- Team Collaboration" in captured.out
+    assert "- Strategic Execution" in captured.out
+    mock_generate_career_plan.assert_called_once()
+
+def test_handle_plan_value_error(mock_generate_career_plan: Mock, capsys: CaptureFixture) -> None:
+    """Test handle_plan when job is not found."""
+    mock_generate_career_plan.side_effect = ValueError("Job 'Nonexistent' not found")
+    args = argparse.Namespace(sport="Basketball", role="Player", grit=8, teamwork=9, target_job="Nonexistent")
+
+    handle_plan(args)
+    captured = capsys.readouterr()
+
+    assert "Error: Job 'Nonexistent' not found" in captured.out
+    assert "Please check the available jobs" in captured.out
+    mock_generate_career_plan.assert_called_once()
