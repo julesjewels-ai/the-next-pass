@@ -1,7 +1,7 @@
 """
 Domain models for The 98% Platform.
 """
-from typing import List
+
 from pydantic import BaseModel, Field
 
 
@@ -23,11 +23,18 @@ class Job(BaseModel):
     employer: str = Field("General", description="The hiring company")
     min_grit: int = Field(0, description="Minimum grit score required")
     min_teamwork: int = Field(0, description="Minimum teamwork score required")
-    required_skills: List[str] = Field(default_factory=list, description="Skills required for the job")
+    required_skills: list[str] = Field(default_factory=list, description="Skills required for the job")
 
 
 class Employer(BaseModel):
     """Represents a hiring partner."""
     name: str = Field(..., description="The company name")
     industry: str = Field(..., description="The industry sector")
-    required_skills: List[str] = Field(..., description="List of required skills")
+    required_skills: list[str] = Field(..., description="List of required skills")
+
+class CareerPlan(BaseModel):
+    """Represents a generated career plan identifying missing skills."""
+    target_job_title: str = Field(..., description="The title of the targeted job")
+    current_skills: list[str] = Field(default_factory=list, description="The skills the athlete currently possesses")
+    missing_skills: list[str] = Field(default_factory=list, description="The skills required for the job that the athlete lacks")
+    is_ready: bool = Field(..., description="True if the athlete has all required skills")

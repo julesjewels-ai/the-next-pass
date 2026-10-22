@@ -34,3 +34,8 @@
 -   **Status**: Completed.
 -   **Focus**: Implement Skill Demand Analytics.
 -   **Outcome**: Added `get_skill_demand_report` in `src/core/services.py` to aggregate skill frequencies across jobs and employers. Added `demand` CLI command in `main.py` and unit tests in `tests/test_analytics.py`. Verified with Validation Gates.
+
+## [Current Date] - Career Plans / Skill Gap Analysis (Phase 4)
+-   **Status**: Completed.
+-   **Focus**: Implement Career Plan generator and Skill Gap Analysis.
+-   **Outcome**: Created `CareerPlan` DTO in `src/core/models.py`. Added `generate_career_plan` in `src/core/services.py` with case-insensitive input validation (GRASP applied). Integrated `plan` CLI command in `main.py`. Added parameterized tests in `tests/test_career_plan.py` covering skill gap resolution and validation edge cases.
