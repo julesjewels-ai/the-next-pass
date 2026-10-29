@@ -1,8 +1,9 @@
 """
 Unit tests for the Analytics and Reporting features.
 """
+from src.core.data import SKILL_LEADERSHIP, SKILL_TEAM_COLLABORATION
 from src.core.services import get_skill_demand_report
-from src.core.data import SKILL_TEAM_COLLABORATION, SKILL_LEADERSHIP
+
 
 def test_get_skill_demand_report():
     """
