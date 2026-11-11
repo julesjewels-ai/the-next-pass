@@ -1,0 +1,16 @@
+src/core/models.py
+    C 8:0 AthleteProfile - A (1)
+    C 14:0 Skill - A (1)
+    C 20:0 Job - A (1)
+    C 29:0 Employer - A (1)
+src/core/services.py
+    F 119:0 match_opportunities - B (6)
+    F 29:0 _resolve_composite_skills - A (4)
+    F 59:0 match_careers - A (4)
+    F 96:0 get_skill_demand_report - A (4)
+    F 20:0 _resolve_skills - A (3)
+    F 76:0 match_employers - A (3)
+    F 41:0 translate_skills - A (2)
+
+11 blocks (classes, functions, methods) analyzed.
+Average complexity: A (2.727272727272727)
