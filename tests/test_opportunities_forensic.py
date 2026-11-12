@@ -2,15 +2,16 @@
 Forensic unit tests for opportunity matching (skills + soft skills).
 Isolates logic by mocking databases.
 """
-from typing import List, Dict
+
 import pytest
 from pytest_mock import MockerFixture
 
-from src.core.models import AthleteProfile, Job, Employer
+from src.core.models import AthleteProfile, Employer, Job
 from src.core.services import match_opportunities
 
+
 @pytest.fixture
-def mock_jobs_db(mocker: MockerFixture) -> List[Job]:
+def mock_jobs_db(mocker: MockerFixture) -> list[Job]:
     """Mock JOBS_DB with controlled data."""
     jobs = [
         Job(
@@ -39,7 +40,7 @@ def mock_jobs_db(mocker: MockerFixture) -> List[Job]:
     return jobs
 
 @pytest.fixture
-def mock_employers_index(mocker: MockerFixture) -> Dict[str, Employer]:
+def mock_employers_index(mocker: MockerFixture) -> dict[str, Employer]:
     """Mock EMPLOYERS_INDEX with controlled data."""
     index = {
         "MockCorp": Employer(
@@ -58,8 +59,8 @@ def mock_employers_index(mocker: MockerFixture) -> Dict[str, Employer]:
 
 def test_match_opportunities_forensic_exact_match(
     mocker: MockerFixture,
-    mock_jobs_db: List[Job],
-    mock_employers_index: Dict[str, Employer]
+    mock_jobs_db: list[Job],
+    mock_employers_index: dict[str, Employer]
 ) -> None:
     """Test exact match boundary where athlete has precisely the required skills."""
     # Mock translate_skills so we have absolute control over the returned skills
@@ -77,8 +78,8 @@ def test_match_opportunities_forensic_exact_match(
 
 def test_match_opportunities_forensic_missing_employer_skill(
     mocker: MockerFixture,
-    mock_jobs_db: List[Job],
-    mock_employers_index: Dict[str, Employer]
+    mock_jobs_db: list[Job],
+    mock_employers_index: dict[str, Employer]
 ) -> None:
     """Test failure when athlete has job skills but missing employer skills."""
     mocker.patch(
@@ -93,8 +94,8 @@ def test_match_opportunities_forensic_missing_employer_skill(
 
 def test_match_opportunities_forensic_missing_job_skill(
     mocker: MockerFixture,
-    mock_jobs_db: List[Job],
-    mock_employers_index: Dict[str, Employer]
+    mock_jobs_db: list[Job],
+    mock_employers_index: dict[str, Employer]
 ) -> None:
     """Test failure when athlete has employer skills but missing job skills."""
     mocker.patch(
@@ -109,7 +110,7 @@ def test_match_opportunities_forensic_missing_job_skill(
 
 def test_match_opportunities_forensic_empty_db(
     mocker: MockerFixture,
-    mock_employers_index: Dict[str, Employer]
+    mock_employers_index: dict[str, Employer]
 ) -> None:
     """Test edge case with empty jobs database."""
     mocker.patch("src.core.services.JOBS_DB", [])
@@ -125,7 +126,7 @@ def test_match_opportunities_forensic_empty_db(
 
 def test_match_opportunities_forensic_employer_not_found(
     mocker: MockerFixture,
-    mock_jobs_db: List[Job]
+    mock_jobs_db: list[Job]
 ) -> None:
     """Test resilience when job's employer is not in EMPLOYERS_INDEX."""
     # Ensure index is empty
